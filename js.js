@@ -58,30 +58,51 @@ function ExpangeCanvas(canvasid, width, height)
 	}
 }
 
-let canvas = document.querySelectorAll('.canvas1');
-for(let i = 0; i < canvas.length; i++) {
-    let ctx = canvas[i].getContext('2d');
-    ctx.beginPath();
-    ctx.lineWidth = 2; //толщина 5px
-    ctx.moveTo(150, 0);
-    ctx.lineTo(150, 50);
-    ctx.stroke();
-}
+
+
+
+
+let ctx = document.querySelector('.canvas1').getContext('2d');
+ctx.beginPath();
+ctx.lineWidth = 2; //толщина 5px
+ctx.moveTo(150, 0);
+ctx.lineTo(150, 50);
+ctx.stroke();
+
+
 
 
 
 let ctxHorizontal = document.querySelector('.canvashorizontal').getContext('2d');
 ctxHorizontal.beginPath();
 ctxHorizontal.lineWidth = 2; //толщина 5px
-ctxHorizontal.moveTo(1000, 0);
-ctxHorizontal.lineTo(150, 0);
-ctxHorizontal.lineTo(150, 100);
-ctxHorizontal.moveTo(1000, 0);
-ctxHorizontal.lineTo(1000, 50);
-ctxHorizontal.moveTo(715, 0);
-ctxHorizontal.lineTo(715, 50);
-ctxHorizontal.moveTo(430, 0);
-ctxHorizontal.lineTo(430, 50);
+// вертикальная линия
+ctxHorizontal.moveTo(572, 0);
+ctxHorizontal.lineTo(572, 50);
+// горизонтальная линия справа
+ctxHorizontal.lineTo(150, 50);
+ctxHorizontal.moveTo(50, 0);
+
+// горизонтальная линия слева
+ctxHorizontal.moveTo(429, 50);
+ctxHorizontal.lineTo(987, 50);
+
+// подлинии
+// линия 1
+ctxHorizontal.moveTo(150, 100);
+ctxHorizontal.lineTo(150, 50);
+
+// линия 2
+ctxHorizontal.moveTo(429, 100);
+ctxHorizontal.lineTo(429, 50);
+
+// линия 3
+ctxHorizontal.moveTo(708, 100);
+ctxHorizontal.lineTo(708, 50);
+
+// линия 4
+ctxHorizontal.moveTo(987, 100);
+ctxHorizontal.lineTo(987, 50);
 ctxHorizontal.stroke();
 
 
@@ -195,30 +216,49 @@ canvasvertical.stroke();
 
 
 
-let canvashorizontal2 = document.querySelector('.canvashorizontal2').getContext('2d');
-canvashorizontal2.beginPath();
-canvashorizontal2.lineWidth = 2; //толщина 5px
+let canvasvertical2 = document.querySelector('.canvasvertical2').getContext('2d');
+canvasvertical2.beginPath();
+canvasvertical2.lineWidth = 2; //толщина 5px
+// ================================================================
 // вертикальная линия
-canvashorizontal2.moveTo(429, 0);
-canvashorizontal2.lineTo(429, 50);
-// горизонтальная линия справа
-canvashorizontal2.lineTo(150, 50);
-canvashorizontal2.moveTo(50, 0);
+canvasvertical2.moveTo(665, 0);
+canvasvertical2.lineTo(665, 100);
 
-// горизонтальная линия слева
-canvashorizontal2.moveTo(429, 50);
-canvashorizontal2.lineTo(708, 50);
+//  первая короткая горизонтальная линия
+canvasvertical2.moveTo(665, 100);
+canvasvertical2.lineTo(685, 100);
 
-// подлинии
-// линия 1
-canvashorizontal2.moveTo(150, 100);
-canvashorizontal2.lineTo(150, 50);
 
-// линия 2
-canvashorizontal2.moveTo(429, 100);
-canvashorizontal2.lineTo(429, 50);
+// второй отдел
+// по вертикали
+canvasvertical2.moveTo(665, 100);
+canvasvertical2.lineTo(665, 300);
+// вторая короткая горизонтальная линия
+canvasvertical2.moveTo(665, 300);
+canvasvertical2.lineTo(685, 300);
 
-// линия 3
-canvashorizontal2.moveTo(708, 100);
-canvashorizontal2.lineTo(708, 50);
-canvashorizontal2.stroke();
+
+// должности
+// по вертикали
+canvasvertical2.moveTo(665, 100);
+canvasvertical2.lineTo(665, 480);
+// вторая короткая горизонтальная линия
+canvasvertical2.moveTo(665, 480);
+canvasvertical2.lineTo(685, 480);
+
+// по вертикали
+canvasvertical2.moveTo(665, 100);
+canvasvertical2.lineTo(665, 650);
+// вторая короткая горизонтальная линия
+canvasvertical2.moveTo(665, 650);
+canvasvertical2.lineTo(685, 650);
+
+// по вертикали
+canvasvertical2.moveTo(665, 100);
+canvasvertical2.lineTo(665, 850);
+// вторая короткая горизонтальная линия
+canvasvertical2.moveTo(665, 850);
+canvasvertical2.lineTo(685, 850);
+// ================================================================
+
+canvasvertical2.stroke();
