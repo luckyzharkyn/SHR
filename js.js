@@ -58,9 +58,120 @@ function ExpangeCanvas(canvasid, width, height)
 	}
 }
 
+let array = {
+    "GosOrganName": "Акимат города Алматы",
+    "firstRuk": {
+        "firstRukName": "Жаркын",
+        "firstRukSurname": "Маркабаев", 
+        "position": "Заместитель"
+    },
+    "Rukovodstvo": [
+        {
+            "RukName": "Марат",
+            "RukSurname": "Башмаков",
+            "RukPosition": "Руководство"
+        }, 
+        {
+            "RukName": "Ерназар",
+            "RukSurname": "Кадыров",
+            "RukPosition": "Руководство"
+        },
+        {
+            "RukName": "Бахтияр",
+            "RukSurname": "Калашников",
+            "RukPosition": "Руководство"
+        },
+        {
+            "RukName": "Темирхан",
+            "RukSurname": "Кондиционерович",
+            "RukPosition": "Руководство"
+        },
+       
+    ]
+}
 
 
 
+
+function Start() {
+    getRukovodstvo(array.Rukovodstvo)
+    getHorizontalLines();
+}
+Start();
+
+function getRukovodstvo(arr) {
+    let OtdelsRukovodstvo = document.querySelector(".OtdelsRukovodstvo");
+    let Rukovodstvo = document.createElement("div");
+    Rukovodstvo.className = "Rukovodstvo";
+    let text = "";
+    for(let i = 0; i < arr.length; i++) {    
+        text += getOtdel(arr[i].RukName, arr[i].RukSurname, arr[i].RukPosition);
+    }
+    Rukovodstvo.innerHTML = text;
+    OtdelsRukovodstvo.appendChild(Rukovodstvo);
+}
+
+function getHorizontalLines() {
+    let OtdelsRukovodstvo = document.querySelector(".OtdelsRukovodstvo");
+    let horizontalLines = document.createElement("div");
+    horizontalLines.className = "horizontalLines";
+    let Rukovodstvo = document.querySelector(".Rukovodstvo");
+    let RukovodstvoSize = array.Rukovodstvo.length;
+    
+    let width = Rukovodstvo.offsetWidth;
+    let text = `
+        <canvas class="canvashorizontal" width="${width}" height="100"></canvas>              
+    `;
+    horizontalLines.innerHTML = text;
+    OtdelsRukovodstvo.prepend(horizontalLines);
+    setCanvasHorizontal(width, RukovodstvoSize)
+}
+function setCanvasHorizontal(width, RukovodstvoSize) {
+    // функция рисует линии между первым рук и руководством
+    let otdel = document.querySelector(".OtdelsRukovodstvo .Rukovodstvo .Otdel")
+    let otdelSize = otdel.offsetWidth;   // ширина одного отдела
+
+    let ctxHorizontal = document.querySelector('.canvashorizontal').getContext('2d');
+    ctxHorizontal.beginPath();
+
+    ctxHorizontal.lineWidth = 2; //толщина 2px
+    // вертикальная линия
+    let valueCenterBlock = width/2;    // центр блока
+    let centerOneOtdel = otdelSize / 2; // центр ширины одного отдела
+    ctxHorizontal.moveTo(valueCenterBlock, 0);
+    ctxHorizontal.lineTo(valueCenterBlock, 50);
+    // горизонтальная линия справа
+    ctxHorizontal.lineTo(centerOneOtdel, 50);
+    ctxHorizontal.moveTo(50, 0);
+    let valueEndPoint = width - centerOneOtdel;  // конечная точка горизонтальной линии
+    // горизонтальная линия слева
+    ctxHorizontal.moveTo(valueCenterBlock, 50);
+    ctxHorizontal.lineTo(valueEndPoint, 50);
+
+    // =============== подлинии =====================
+    let valueStartPoint = centerOneOtdel;
+    for(let i = 0; i < RukovodstvoSize; i++) {
+        ctxHorizontal.moveTo(valueStartPoint, 100);
+        ctxHorizontal.lineTo(valueStartPoint, 50);
+        valueStartPoint += otdelSize;
+    }
+    // =============== подлинии =====================
+    ctxHorizontal.stroke();
+}
+
+function getOtdel(name, surname, position) {
+    return `
+        <div class="Otdel">
+            <div class="rukovodstvo">
+                <div class="SR_card">
+                    <p>${name}</p>
+                    <p>${surname}</p>
+                    <p>${position}</p>
+                </div>
+            </div>
+        </div>
+    `
+}
 
 let ctx = document.querySelector('.canvas1').getContext('2d');
 ctx.beginPath();
@@ -73,37 +184,7 @@ ctx.stroke();
 
 
 
-let ctxHorizontal = document.querySelector('.canvashorizontal').getContext('2d');
-ctxHorizontal.beginPath();
-ctxHorizontal.lineWidth = 2; //толщина 5px
-// вертикальная линия
-ctxHorizontal.moveTo(572, 0);
-ctxHorizontal.lineTo(572, 50);
-// горизонтальная линия справа
-ctxHorizontal.lineTo(150, 50);
-ctxHorizontal.moveTo(50, 0);
 
-// горизонтальная линия слева
-ctxHorizontal.moveTo(429, 50);
-ctxHorizontal.lineTo(987, 50);
-
-// подлинии
-// линия 1
-ctxHorizontal.moveTo(150, 100);
-ctxHorizontal.lineTo(150, 50);
-
-// линия 2
-ctxHorizontal.moveTo(429, 100);
-ctxHorizontal.lineTo(429, 50);
-
-// линия 3
-ctxHorizontal.moveTo(708, 100);
-ctxHorizontal.lineTo(708, 50);
-
-// линия 4
-ctxHorizontal.moveTo(987, 100);
-ctxHorizontal.lineTo(987, 50);
-ctxHorizontal.stroke();
 
 
 // Горизонтальная красная линия на светло-желтом фоне
