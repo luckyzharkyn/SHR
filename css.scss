@@ -8,15 +8,22 @@
     justify-content: center;
     align-items: center;
 
+    .slowlyShow {
+        transition: 1s;
+        opacity: 0;
+        visibility: collapse;
+    }
+
     .dontShow {
         visibility: hidden;
     }
+   
     .BigBlock {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
+       
         .OtdelsRukovodstvo {
             display: flex;
             flex-direction: column;
@@ -27,11 +34,13 @@
                 height: 100px;
             }
         }
+      
         .firstKategory, .secondKategory {
             display: flex;
             justify-content: center;
             align-items: flex-start;
             margin-left: 90px;
+          
         }
         .secondKategory {
             .Otdel {
