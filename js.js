@@ -85,6 +85,11 @@ let array = {
                     "RukName": "Жансая",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
+                },
+                {
+                    "RukName": "Жансая",
+                    "RukSurname": "Сандугашова",
+                    "RukPosition": "Отдел по производству носков",
                 }
             ]
         }, 
@@ -97,6 +102,11 @@ let array = {
                     "RukName": "Дина",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству башмаков",
+                },
+                {
+                    "RukName": "Саяжан",
+                    "RukSurname": "Сандугашова",
+                    "RukPosition": "Отдел по производству носков",
                 },
                 {
                     "RukName": "Саяжан",
@@ -139,7 +149,18 @@ let array = {
             "RukPosition": "Руководство",
             "subordinate_departments": []
         },
-       
+        {
+            "RukName": "Темирхан",
+            "RukSurname": "Кондиционерович",
+            "RukPosition": "Руководство",
+            "subordinate_departments": [
+                {
+                    "RukName": "Олжас",
+                    "RukSurname": "Акмаралкызы",
+                    "RukPosition": "Отдел по производству труб",
+                },
+            ]
+        },
     ],
 
 }
@@ -152,6 +173,7 @@ function Start() {
     getHorizontalLines();
     getOtdels()
     getCanvasVerticalLines();
+    activeClass()
 }
 Start();
 
@@ -341,31 +363,10 @@ function drawVerticalLines(verticalLinesHeight) {
     canvasvertical.beginPath();
     canvasvertical.lineWidth = 2; //толщина 5px
  
-        // второй отдел
-    // по вертикали
-    // canvasvertical.moveTo(startPoint, heightEndPoint + nextEndPoint);
-    // canvasvertical.lineTo(startPoint, heightEndPoint + nextEndPoint + nextEndPoint);
-    // // вторая короткая горизонтальная линия
-    // canvasvertical.moveTo(startPoint, heightEndPoint + nextEndPoint + nextEndPoint);
-    // canvasvertical.lineTo(startPoint + 20, heightEndPoint + nextEndPoint + nextEndPoint);
-
     let startPoint = 50;
     
     let newArr = getNewArrayOtdels();
-    for(let i = 0; i < 1; i++) {
-        if(firstKategory) { 
-            // первая линия
-            // if(i == 0) {
-            //     heightEndPoint = 0;
-            // } else {
-            //     heightEndPoint = verticalLinesHeight + halfOtdelHeightSize;
-            // }
-            // let nextEndPoint = gap + halfOtdelHeightSize;
-            // drawLine(startPoint, heightEndPoint, nextEndPoint)
-            
-            
-        }
-    }
+    
     let nextEndPoint = 0;
     for(let i = 0; i < newArr.length; i++) {
         startPoint = 50;
@@ -399,36 +400,7 @@ function drawVerticalLines(verticalLinesHeight) {
 
 canvasvertical.stroke();
 
-// let canvasvertical = document.querySelector('.canvasvertical').getContext('2d');
-// canvasvertical.beginPath();
-// canvasvertical.lineWidth = 2; //толщина 5px
-// ==========================================================
-// первая линия
-// первый отдел
-// по горизонтали
-// canvasvertical.moveTo(startPoint, 0);
-// canvasvertical.lineTo(startPoint, heightEndPoint);
-// //  первая короткая горизонтальная линия
-// canvasvertical.moveTo(startPoint, heightEndPoint);
-// canvasvertical.lineTo(startPoint + 20, heightEndPoint);
 
-// // второй отдел
-// // по вертикали
-// canvasvertical.moveTo(startPoint, heightEndPoint);
-// canvasvertical.lineTo(startPoint, heightEndPoint + nextEndPoint);
-// // вторая короткая горизонтальная линия
-// canvasvertical.moveTo(startPoint, heightEndPoint + nextEndPoint);
-// canvasvertical.lineTo(startPoint + 20, heightEndPoint + nextEndPoint);
-
-// // второй отдел
-// // по вертикали
-// canvasvertical.moveTo(startPoint, heightEndPoint + nextEndPoint);
-// canvasvertical.lineTo(startPoint, heightEndPoint + nextEndPoint + nextEndPoint);
-// // вторая короткая горизонтальная линия
-// canvasvertical.moveTo(startPoint, heightEndPoint + nextEndPoint + nextEndPoint);
-// canvasvertical.lineTo(startPoint + 20, heightEndPoint + nextEndPoint + nextEndPoint);
-
-// ==========================================================
 
 
 
@@ -481,6 +453,27 @@ canvasvertical.stroke();
 // canvasvertical2.lineTo(685, 850);
 // ================================================================
 
+}
+
+
+function activeClass() {
+    let otdels = document.querySelectorAll(".Otdel");
+    for(let otdel of otdels) {
+        otdel.addEventListener("click", function(event) {
+            let secondKategories = document.querySelectorAll(".secondKategory");
+            for(let secondKategory of secondKategories) {
+                let child = secondKategory.querySelectorAll(".Otdel");
+                console.log(child)
+                for(let elem of child) {
+                    elem.className = "dontShow"
+                }
+            }
+
+            let OtdelKategories = document.querySelector(".OtdelKategories");
+            OtdelKategories.replaceChildren()
+            getOtdels()
+        })
+    }
 }
 let ctx = document.querySelector('.canvas1').getContext('2d');
 ctx.beginPath();
