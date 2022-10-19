@@ -81,6 +81,22 @@ let array = {
                     "RukName": "Шынар",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству башмаков",
+                    "subordinate_departments" : [
+                        {
+                            id: id(),
+                            "RukName": "Шынар1",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "Отдел по производству башмаков",
+                        }
+                    ],
+                    "employees": [
+                        {
+                            id: id(),
+                            "RukName": "Шынар2",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "Отдел по производству башмаков",
+                        }
+                    ]
                 },
                 {
                     id: id(),
@@ -168,26 +184,13 @@ let array = {
             "RukPosition": "Руководство",
             "subordinate_departments": []
         },
-        {
-            id: id(),
-            "RukName": "Темирхан",
-            "RukSurname": "Кондиционерович",
-            "RukPosition": "Руководство",
-            "subordinate_departments": [
-                {
-                    id: id(),
-                    "RukName": "Олжас",
-                    "RukSurname": "Акмаралкызы",
-                    "RukPosition": "Отдел по производству труб",
-                },
-            ]
-        },
     ],
 
 }
-
+// ============== global params =========
 let newArray = getNewArrayOtdels()
 let verticalLinesHeight = 50;
+// ============== global params =========
 
 function Start() {
     getRukovodstvo(array.Rukovodstvo)
@@ -196,8 +199,18 @@ function Start() {
     getCanvasVerticalLines();
     activeClass()
     RukovodstvoshowAllElements()
+    // =========== 
+    getPodCategoryVerticalLines()
 }
 Start();
+
+
+let ctx = document.querySelector('.canvas1').getContext('2d');
+ctx.beginPath();
+ctx.lineWidth = 2; //толщина 5px
+ctx.moveTo(150, 0);
+ctx.lineTo(150, 50);
+ctx.stroke();
 
 function getRukovodstvo(arr) {
     let OtdelsRukovodstvo = document.querySelector(".OtdelsRukovodstvo");
@@ -323,7 +336,6 @@ function getNewArrayOtdels() {
 function getOtdels() {
     let BigBlock = document.querySelector(".BigBlock .OtdelKategories");
     let newArr = getNewArrayOtdels()
-    console.log(newArr)
     
     for(let i = 0; i < newArr.length; i++) {
         let text = "";
@@ -342,7 +354,6 @@ function getOtdels() {
         if(text) {
             secondKategory.id = id()
             secondKategory.innerHTML = text;
-            console.log(secondKategory)
             
             BigBlock.appendChild(secondKategory);
         }
@@ -377,22 +388,22 @@ function drawVerticalLines(modifyArray=newArray) {
     // функция рисует линии между первым рук и руководством
     let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .Otdel")
     let otdelHeightSize = otdel.offsetHeight;   // высота одного отдела
-    let halfOtdelHeightSize = otdelHeightSize / 2;
-    let heightEndPoint = verticalLinesHeight + halfOtdelHeightSize;
-    let otdelRukWidth = document.querySelector(".BigBlock .OtdelsRukovodstvo .Rukovodstvo .Otdel").offsetWidth;
+    let halfOtdelHeightSize = otdelHeightSize / 2; // половина высоты отдела
+    let heightEndPoint = verticalLinesHeight + halfOtdelHeightSize; // конечная точка для первого отдела(середина отдела)
+    let otdelRukWidth = document.querySelector(".BigBlock .OtdelsRukovodstvo .Rukovodstvo .Otdel").offsetWidth; // ширина отдела
 
-    let secondKategory = document.querySelector(".secondKategory")
-    let secondKategoryHeight = secondKategory.offsetHeight;
-    let gap = secondKategoryHeight - otdelHeightSize;
+    let firstKategory = document.querySelector(".firstKategory")
+    let firstKategoryHeight = firstKategory.offsetHeight + verticalLinesHeight;   // высота блока firstKategory
+    let gap = firstKategoryHeight - otdelHeightSize;   // зазор между отделами(вертикально)
 
     let canvasvertical = document.querySelector('.canvasvertical').getContext('2d');
     canvasvertical.beginPath();
-    canvasvertical.lineWidth = 2; //толщина 5px
+    canvasvertical.lineWidth = 2; //толщина 2px
  
     let startPoint = 50;
     
-    let newArr = modifyArray;
-    console.log(newArr)
+    let newArr = modifyArray;    // переменная равно переданному массиву. Если ничего не передано, берется значение по умолч
+
     let nextEndPoint = 0;
     for(let i = 0; i < newArr.length; i++) {
         startPoint = 50;
@@ -443,6 +454,9 @@ function activeClass() {
                     }
                     if(bool2) {
                         elem.classList.add("slowlyShow")
+                        setTimeout(() => {
+                            elem.className = "slowlyShow"
+                        }, 500);
                     }
                 } else {
                     if(elem.id === thisId) {
@@ -451,6 +465,9 @@ function activeClass() {
                     }
                     if(bool2) {
                         elem.classList.add("slowlyShow")
+                        setTimeout(() => {
+                            elem.className = "slowlyShow"
+                        }, 500);
                     }
                 }
             }
@@ -487,10 +504,12 @@ function RukovodstvoshowAllElements() {
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
             let elems = document.querySelectorAll(".slowlyShow");
-            console.log(elems)
+            
             for(let elem of elems) {
-                console.log(elem.id)
+                
                 elem.classList.remove("slowlyShow")
+                elem.classList.add("slowlyView")
+                elem.classList.add("secondKategory")
             }
 
 
@@ -508,14 +527,33 @@ function id() {
     return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
 }
 
-let ctx = document.querySelector('.canvas1').getContext('2d');
-ctx.beginPath();
-ctx.lineWidth = 2; //толщина 5px
-ctx.moveTo(150, 0);
-ctx.lineTo(150, 50);
-ctx.stroke();
 
 
+function getPodCategory() {
+    let podCategory = document.querySelector(".podCategory");
+    
+}
+
+function getPodCategoryVerticalLines() {
+    let SR__block = document.querySelector(".SR__block");
+    let podCategory = document.querySelector(".podCategory");
+
+    let canvashorizontal = document.querySelector(".canvashorizontal")
+    let width = canvashorizontal.offsetWidth;
+    let verticalLinesDiv = document.createElement("div");
+    verticalLinesDiv.className = "verticalLinesDiv";
+
+    // let height = OtdelKategories.offsetHeight;
+    let text = `
+        <div class="verticalLines">
+            <canvas class="canvasvertical2" width="${width}" height="856"></canvas>             
+        </div>
+    `;
+    verticalLinesDiv.innerHTML = text;
+    SR__block.insertBefore(verticalLinesDiv, podCategory)
+
+    // drawVerticalLines(modifyArray)
+}
 
 
 
