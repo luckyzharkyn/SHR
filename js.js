@@ -67,6 +67,7 @@ let array = {
     },
     "Rukovodstvo": [
         {
+            id: id(),
             "RukName": "Марат",
             "RukSurname": "Башмаков",
             "RukPosition": "Руководство",
@@ -98,6 +99,7 @@ let array = {
             ]
         }, 
         {
+            id: id(),
             "RukName": "Ерназар",
             "RukSurname": "Кадыров",
             "RukPosition": "Руководство",
@@ -124,6 +126,7 @@ let array = {
             ]
         },
         {
+            id: id(),
             "RukName": "Бахтияр",
             "RukSurname": "Калашников",
             "RukPosition": "Руководство",
@@ -155,12 +158,14 @@ let array = {
             ]
         },
         {
+            id: id(),
             "RukName": "Темирхан",
             "RukSurname": "Кондиционерович",
             "RukPosition": "Руководство",
             "subordinate_departments": []
         },
         {
+            id: id(),
             "RukName": "Темирхан",
             "RukSurname": "Кондиционерович",
             "RukPosition": "Руководство",
@@ -186,6 +191,7 @@ function Start() {
     getOtdels()
     getCanvasVerticalLines();
     activeClass()
+    RukovodstvoshowAllElements()
 }
 Start();
 
@@ -472,9 +478,9 @@ canvasvertical.stroke();
 
 
 function activeClass() {
-    let otdels = document.querySelectorAll(".Otdel");
+    let otdels = document.querySelectorAll(".OtdelKategories .Otdel");
     for(let otdel of otdels) {
-        otdel.addEventListener("click", function(event) {
+        otdel.addEventListener("click", function() {
             // ================== скрытие и показ элемента ========================
             let thisId = this.parentElement.id;
             let bool2 = false;
@@ -526,6 +532,27 @@ function activeClass() {
     }
 }
 
+function RukovodstvoshowAllElements() {
+    let otdels = document.querySelectorAll(".Rukovodstvo .Otdel");
+    for(let otdel of otdels) {
+        otdel.addEventListener("click", function() {
+            let elems = document.querySelectorAll(".slowlyShow");
+            console.log(elems)
+            for(let elem of elems) {
+                console.log(elem.id)
+                elem.classList.remove("slowlyShow")
+            }
+
+
+            let BigBlock = document.querySelector(".BigBlock");
+            let verticalLinesDiv = document.querySelector(".verticalLinesDiv");
+            BigBlock.removeChild(verticalLinesDiv)
+            getCanvasVerticalLines(newArray)
+        })
+    }
+
+    
+}
 
 let ctx = document.querySelector('.canvas1').getContext('2d');
 ctx.beginPath();
