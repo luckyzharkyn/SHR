@@ -58,6 +58,10 @@ function ExpangeCanvas(canvasid, width, height)
 	}
 }
 
+// Горизонтальная красная линия на светло-желтом фоне
+// var draw3 = new ExpangeCanvas('.canvashorizontal', 1144, 100);
+// draw3.Line(150, 100, 1144, 100, 5, 'black');
+
 let array = {
     "GosOrganName": "Акимат города Алматы",
     "firstRuk": {
@@ -419,61 +423,7 @@ function drawVerticalLines(modifyArray=newArray) {
         canvasvertical.lineTo(startPoint + 20, nextEndPoint);
     }
 
-canvasvertical.stroke();
-
-
-
-
-
-
-
-
-
-// let canvasvertical2 = document.querySelector('.canvasvertical2').getContext('2d');
-// canvasvertical2.beginPath();
-// canvasvertical2.lineWidth = 2; //толщина 5px
-// // ================================================================
-// // вертикальная линия
-// canvasvertical2.moveTo(665, 0);
-// canvasvertical2.lineTo(665, 100);
-
-// //  первая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(685, 100);
-
-
-// // второй отдел
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 300);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 300);
-// canvasvertical2.lineTo(685, 300);
-
-
-// // должности
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 480);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 480);
-// canvasvertical2.lineTo(685, 480);
-
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 650);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 650);
-// canvasvertical2.lineTo(685, 650);
-
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 850);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 850);
-// canvasvertical2.lineTo(685, 850);
-// ================================================================
-
+    canvasvertical.stroke();
 }
 
 
@@ -554,6 +504,10 @@ function RukovodstvoshowAllElements() {
     
 }
 
+function id() {
+    return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
+}
+
 let ctx = document.querySelector('.canvas1').getContext('2d');
 ctx.beginPath();
 ctx.lineWidth = 2; //толщина 5px
@@ -568,19 +522,52 @@ ctx.stroke();
 
 
 
-// Горизонтальная красная линия на светло-желтом фоне
-// var draw3 = new ExpangeCanvas('.canvashorizontal', 1144, 100);
-// draw3.Line(150, 100, 1144, 100, 5, 'black');
+
+// let canvasvertical2 = document.querySelector('.canvasvertical2').getContext('2d');
+// canvasvertical2.beginPath();
+// canvasvertical2.lineWidth = 2; //толщина 5px
+// // ================================================================
+// // вертикальная линия
+// canvasvertical2.moveTo(665, 0);
+// canvasvertical2.lineTo(665, 100);
+
+// //  первая короткая горизонтальная линия
+// canvasvertical2.moveTo(665, 100);
+// canvasvertical2.lineTo(685, 100);
 
 
+// // второй отдел
+// // по вертикали
+// canvasvertical2.moveTo(665, 100);
+// canvasvertical2.lineTo(665, 300);
+// // вторая короткая горизонтальная линия
+// canvasvertical2.moveTo(665, 300);
+// canvasvertical2.lineTo(685, 300);
 
 
+// // должности
+// // по вертикали
+// canvasvertical2.moveTo(665, 100);
+// canvasvertical2.lineTo(665, 480);
+// // вторая короткая горизонтальная линия
+// canvasvertical2.moveTo(665, 480);
+// canvasvertical2.lineTo(685, 480);
 
+// // по вертикали
+// canvasvertical2.moveTo(665, 100);
+// canvasvertical2.lineTo(665, 650);
+// // вторая короткая горизонтальная линия
+// canvasvertical2.moveTo(665, 650);
+// canvasvertical2.lineTo(685, 650);
 
+// // по вертикали
+// canvasvertical2.moveTo(665, 100);
+// canvasvertical2.lineTo(665, 850);
+// // вторая короткая горизонтальная линия
+// canvasvertical2.moveTo(665, 850);
+// canvasvertical2.lineTo(685, 850);
+// ================================================================
 
 // canvasvertical2.stroke();
 
 
-function id() {
-    return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
-}
