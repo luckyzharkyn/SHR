@@ -330,6 +330,7 @@ function getOtdels() {
             }
         }
         if(text) {
+            secondKategory.id = id()
             secondKategory.innerHTML = text;
             console.log(secondKategory)
             
@@ -474,8 +475,32 @@ function activeClass() {
     let otdels = document.querySelectorAll(".Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function(event) {
-            // console.log(otdel.id)
+            // ================== скрытие и показ элемента ========================
+            let thisId = this.parentElement.id;
+            let bool2 = false;
+            let OtdelKategories = document.querySelector(".OtdelKategories").children;
+            for(let elem of OtdelKategories) {
+                if(elem.classList.contains("slowlyShow")) {
+                    if(elem.id === thisId) {
+                        bool2 = true;
+                        continue
+                    }
+                    if(bool2) {
+                        elem.classList.add("slowlyShow")
+                    }
+                } else {
+                    if(elem.id === thisId) {
+                        bool2 = true;
+                        continue;
+                    }
+                    if(bool2) {
+                        elem.classList.add("slowlyShow")
+                    }
+                }
+            }
+            // ================== скрытие и показ элемента ========================
 
+            // ================== регуляровка линии =================
             let tempArray = [];
             let bool = false;
             for(let i = 0; i < newArray.length; i++) {
@@ -494,11 +519,14 @@ function activeClass() {
             let verticalLinesDiv = document.querySelector(".verticalLinesDiv");
             BigBlock.removeChild(verticalLinesDiv)
             getCanvasVerticalLines(tempArray)
+            // ================== регуляровка линии =================
             
             
         })
     }
 }
+
+
 let ctx = document.querySelector('.canvas1').getContext('2d');
 ctx.beginPath();
 ctx.lineWidth = 2; //толщина 5px
