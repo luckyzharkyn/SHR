@@ -72,21 +72,25 @@ let array = {
             "RukPosition": "Руководство",
             "subordinate_departments": [
                 {
+                    id: id(),
                     "RukName": "Шынар",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству башмаков",
                 },
                 {
+                    id: id(),
                     "RukName": "Фаргиза",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
                 },
-                {
+                {   
+                    id: id(),
                     "RukName": "Жансая",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
                 },
                 {
+                    id: id(),
                     "RukName": "Жансая",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
@@ -99,16 +103,19 @@ let array = {
             "RukPosition": "Руководство",
             "subordinate_departments": [
                 {
+                    id: id(),
                     "RukName": "Дина",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству башмаков",
                 },
                 {
+                    id: id(),
                     "RukName": "Саяжан",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
                 },
                 {
+                    id: id(),
                     "RukName": "Саяжан",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
@@ -122,21 +129,25 @@ let array = {
             "RukPosition": "Руководство",
             "subordinate_departments": [
                 {
+                    id: id(),
                     "RukName": "Олжас",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб",
                 },
                 {
+                    id: id(),
                     "RukName": "Асылбек",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб2",
                 },
                 {
+                    id: id(),
                     "RukName": "Ольга",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб3",
                 },
                 {
+                    id: id(),
                     "RukName": "Шынар",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб3",
@@ -155,6 +166,7 @@ let array = {
             "RukPosition": "Руководство",
             "subordinate_departments": [
                 {
+                    id: id(),
                     "RukName": "Олжас",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб",
@@ -165,8 +177,8 @@ let array = {
 
 }
 
-
-
+let newArray = getNewArrayOtdels()
+let verticalLinesHeight = 50;
 
 function Start() {
     getRukovodstvo(array.Rukovodstvo)
@@ -183,7 +195,7 @@ function getRukovodstvo(arr) {
     Rukovodstvo.className = "Rukovodstvo";
     let text = "";
     for(let i = 0; i < arr.length; i++) {    
-        text += getOtdel(arr[i].RukName, arr[i].RukSurname, arr[i].RukPosition);
+        text += getOtdel(arr[i].id, arr[i].RukName, arr[i].RukSurname, arr[i].RukPosition);
     }
     Rukovodstvo.innerHTML = text;
     OtdelsRukovodstvo.appendChild(Rukovodstvo);
@@ -237,13 +249,17 @@ function setCanvasHorizontal(width, RukovodstvoSize) {
     ctxHorizontal.stroke();
 }
 
-function getOtdel(name, surname, position) {
+function getOtdel(id, name, surname, position) {
+    let textId = "";
     let status = "Otdel"
+    if(id != undefined) {
+        textId = `id=${id}`
+    }
     if(name == undefined || surname == undefined || position == undefined) {
         status = "dontShow";
     }
     return `
-        <div class="${status}">
+        <div class="${status}" ${textId}>
             <div class="rukovodstvo">
                 <div class="SR_card">
                     <p>${name}</p>
@@ -310,7 +326,7 @@ function getOtdels() {
 
         for(let j = 0; j < newArr[i].length; j++) {
             if(newArr[i].length) {
-                text += getOtdel(newArr[i][j].RukName, newArr[i][j].RukSurname, newArr[i][j].RukPosition);
+                text += getOtdel(newArr[i][j].id, newArr[i][j].RukName, newArr[i][j].RukSurname, newArr[i][j].RukPosition);
             }
         }
         if(text) {
@@ -324,36 +340,35 @@ function getOtdels() {
 
 }
 
-function getCanvasVerticalLines() {
-    let verticalLinesHeight = 50;
+function getCanvasVerticalLines(modifyArray) {
     let Rukovodstvo = document.querySelector(".Rukovodstvo");
     let BigBlock = document.querySelector(".BigBlock");
     let OtdelKategories = document.querySelector(".OtdelKategories");
 
-    let verticalLines = document.createElement("div");
-    verticalLines.className = "verticalLines";
+    let verticalLinesDiv = document.createElement("div");
+    verticalLinesDiv.className = "verticalLinesDiv";
 
     let width = Rukovodstvo.offsetWidth;
     let height = OtdelKategories.offsetHeight;
     let text = `
-        <canvas class="canvasvertical" width="${width}" height="${height + verticalLinesHeight}"></canvas>             
+        <div class="verticalLines">
+            <canvas class="canvasvertical" width="${width}" height="${height + verticalLinesHeight}"></canvas>             
+        </div>
     `;
-    verticalLines.innerHTML = text;
-    BigBlock.insertBefore(verticalLines, OtdelKategories)
+    verticalLinesDiv.innerHTML = text;
+    BigBlock.insertBefore(verticalLinesDiv, OtdelKategories)
 
-    drawVerticalLines(verticalLinesHeight)
+    drawVerticalLines(modifyArray)
 }
 
 
-function drawVerticalLines(verticalLinesHeight) {
+function drawVerticalLines(modifyArray=newArray) {
     // функция рисует линии между первым рук и руководством
     let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .Otdel")
     let otdelHeightSize = otdel.offsetHeight;   // высота одного отдела
     let halfOtdelHeightSize = otdelHeightSize / 2;
     let heightEndPoint = verticalLinesHeight + halfOtdelHeightSize;
-    let firstKategory = document.querySelector(".firstKategory");
     let otdelRukWidth = document.querySelector(".BigBlock .OtdelsRukovodstvo .Rukovodstvo .Otdel").offsetWidth;
-    let RukSize = array.Rukovodstvo.length;
 
     let secondKategory = document.querySelector(".secondKategory")
     let secondKategoryHeight = secondKategory.offsetHeight;
@@ -365,8 +380,8 @@ function drawVerticalLines(verticalLinesHeight) {
  
     let startPoint = 50;
     
-    let newArr = getNewArrayOtdels();
-    
+    let newArr = modifyArray;
+    console.log(newArr)
     let nextEndPoint = 0;
     for(let i = 0; i < newArr.length; i++) {
         startPoint = 50;
@@ -396,7 +411,6 @@ function drawVerticalLines(verticalLinesHeight) {
         canvasvertical.moveTo(startPoint, nextEndPoint);
         canvasvertical.lineTo(startPoint + 20, nextEndPoint);
     }
-    
 
 canvasvertical.stroke();
 
@@ -460,18 +474,28 @@ function activeClass() {
     let otdels = document.querySelectorAll(".Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function(event) {
-            let secondKategories = document.querySelectorAll(".secondKategory");
-            for(let secondKategory of secondKategories) {
-                let child = secondKategory.querySelectorAll(".Otdel");
-                console.log(child)
-                for(let elem of child) {
-                    elem.className = "dontShow"
+            // console.log(otdel.id)
+
+            let tempArray = [];
+            let bool = false;
+            for(let i = 0; i < newArray.length; i++) {
+                if(bool) {
+                    tempArray.push([]);
+                } else {
+                    for(let j = 0; j < newArray[i].length; j++) {
+                        if(newArray[i][j].id === otdel.id) {
+                            bool = true;    
+                        }
+                    }
+                    tempArray.push(newArray[i])
                 }
             }
-
-            let OtdelKategories = document.querySelector(".OtdelKategories");
-            OtdelKategories.replaceChildren()
-            getOtdels()
+            let BigBlock = document.querySelector(".BigBlock");
+            let verticalLinesDiv = document.querySelector(".verticalLinesDiv");
+            BigBlock.removeChild(verticalLinesDiv)
+            getCanvasVerticalLines(tempArray)
+            
+            
         })
     }
 }
@@ -500,3 +524,8 @@ ctx.stroke();
 
 
 // canvasvertical2.stroke();
+
+
+function id() {
+    return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
+}
