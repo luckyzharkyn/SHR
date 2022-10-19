@@ -8,6 +8,9 @@
     justify-content: center;
     align-items: center;
 
+    .dontShow {
+        visibility: hidden;
+    }
     .BigBlock {
         display: flex;
         flex-direction: column;
