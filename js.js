@@ -87,6 +87,14 @@ let array = {
                             "RukName": "Шынар1",
                             "RukSurname": "Акмаралкызы",
                             "RukPosition": "Отдел по производству башмаков",
+                            "subordinate_departments" : [
+                                {
+                                    id: id(),
+                                    "RukName": "Шынар1",
+                                    "RukSurname": "Акмаралкызы",
+                                    "RukPosition": "Отдел по производству башмаков",
+                                }
+                            ],
                         }
                     ],
                     "employees": [
@@ -126,9 +134,59 @@ let array = {
             "subordinate_departments": [
                 {
                     id: id(),
-                    "RukName": "Дина",
+                    "RukName": "Бектибек",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству башмаков",
+                    "subordinate_departments": [
+                        {
+                            id: id(),
+                            "RukName": "Динаfdff",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "Отдел по производству башмаков",
+                        },
+                        {
+                            id: id(),
+                            "RukName": "Саяжанwwwwwww",
+                            "RukSurname": "Сандугашова",
+                            "RukPosition": "Отдел по производству носков",
+                            "subordinate_departments": [
+                                {
+                                    id: id(),
+                                    "RukName": "Динаrrrrrr",
+                                    "RukSurname": "Акмаралкызы",
+                                    "RukPosition": "Отдел по производству башмаков",
+                                },
+                                {
+                                    id: id(),
+                                    "RukName": "Саяжанtttttt",
+                                    "RukSurname": "Сандугашова",
+                                    "RukPosition": "Отдел по производству носков",
+                                },
+                                {
+                                    id: id(),
+                                    "RukName": "Саяжанyyyyyyyy",
+                                    "RukSurname": "Сандугашова",
+                                    "RukPosition": "Отдел по производству носков",
+                                },
+                               
+                            ],
+                            "employees": [
+                                {
+                                    id: id(),
+                                    "RukName": "Шынар2",
+                                    "RukSurname": "Акмаралкызы",
+                                    "RukPosition": "Отдел по производству башмаков",
+                                }
+                            ]
+                        },
+                        {
+                            id: id(),
+                            "RukName": "Саяжан",
+                            "RukSurname": "Сандугашова",
+                            "RukPosition": "Отдел по производству носков",
+                        },
+                       
+                    ]
                 },
                 {
                     id: id(),
@@ -199,8 +257,6 @@ function Start() {
     getCanvasVerticalLines();
     activeClass()
     RukovodstvoshowAllElements()
-    // =========== 
-    getPodCategoryVerticalLines()
 }
 Start();
 
@@ -443,6 +499,7 @@ function activeClass() {
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
             // ================== скрытие и показ элемента ========================
+            getPodCategory(this.id)
             let thisId = this.parentElement.id;
             let bool2 = false;
             let OtdelKategories = document.querySelector(".OtdelKategories").children;
@@ -523,41 +580,146 @@ function RukovodstvoshowAllElements() {
     
 }
 
-function id() {
-    return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
+
+
+function getArrayPodcategory(id, arr) {
+    let arrLength = arr.length;
+    let findObj = null;
+    let result;
+    let number;
+    let podarr = [];
+    
+    for(let i = 0; i < arr.length; i++) {
+        if(arr[i].subordinate_departments) {
+            for(let j = 0; j < arr[i].subordinate_departments.length; j++) {
+               result = getFindObj(id, arr[i].subordinate_departments[j]);
+               if(result != null) {
+                number = i;
+                findObj = result;
+                break;
+               } 
+            }
+        }
+    }
+    if(findObj) {
+        let subordinate_departmentsLength = 0;
+        if(findObj.subordinate_departments) {
+            subordinate_departmentsLength = findObj.subordinate_departments.length;
+        } 
+        let employeesLength = 0;
+        if(findObj.employees) {
+            employeesLength = findObj.employees.length;
+        }
+    
+        for(let i = 0; i < subordinate_departmentsLength; i++) {
+            let tempArr = [];
+            for(let j = 0; j < arrLength; j++) {
+                if(j != number) {
+                    tempArr.push("");
+                } else {
+                    tempArr.push(findObj.subordinate_departments[i])
+                }
+            }
+            podarr.push(tempArr);
+        }
+    
+        for(let i = 0; i < employeesLength; i++) {
+            let tempArr = [];
+            for(let j = 0; j < arrLength; j++) {
+                if(j != number) {
+                    tempArr.push("");
+                } else {
+                    tempArr.push(findObj.employees[i])
+                }
+            }
+            podarr.push(tempArr);
+        }
+        return podarr;
+    } else {
+        return null
+    }
+}
+
+function getFindObj(id, subordinate_departments) {
+        if(subordinate_departments.id === id) {
+            return subordinate_departments;
+        } else {
+            if(subordinate_departments.subordinate_departments) {
+                let result;
+                for(let i = 0; i < subordinate_departments.subordinate_departments.length; i++) {
+                    result =  getFindObj(id, subordinate_departments.subordinate_departments[i])
+                    if(result != null) {
+                        return result
+                    }
+                }
+                return null;
+            } else {
+                return null
+            }
+        }
+}
+
+function getPodCategory(id) {
+    let SR__block = document.querySelector(".SR__block");
+   let PodCategory = document.createElement("div");
+   PodCategory.className = "podCategory";
+   let result = getArrayPodcategory(id, array.Rukovodstvo)
+   
+   console.log(result)        
+   for(let i = 0; i < result.length; i++) {
+        let text = "";
+        let podOtdelsSecondKategory = document.createElement("div");
+        
+        if(i == 0) {
+            podOtdelsSecondKategory.className = "podOtdelsFirstKategory";
+        } else {
+            podOtdelsSecondKategory.className = "podOtdelsSecondKategory";
+        }
+
+        for(let j = 0; j < array.Rukovodstvo.length; j++) {
+            text += getOtdel(result[i][j].id, result[i][j].RukName, result[i][j].RukSurname, result[i][j].RukPosition)
+        }
+
+        if(text) {
+            // podOtdelsSecondKategory.id = id()
+            podOtdelsSecondKategory.innerHTML = text;
+            
+            PodCategory.appendChild(podOtdelsSecondKategory);
+        }
+
+    }
+
+    SR__block.appendChild(PodCategory)
+
+    getPodCategoryVerticalLines()
+}
+
+function getPodCategoryVerticalLines() {
+    let SR__block = document.querySelector(".SR__block");
+    let lastElement = SR__block.lastElementChild;
+
+    let canvashorizontal = document.querySelector(".canvashorizontal")
+    let width = canvashorizontal.offsetWidth;
+    let verticalLinesDiv = document.createElement("div");
+    verticalLinesDiv.className = "verticalLinesDiv";
+
+    // let height = OtdelKategories.offsetHeight;
+    let text = `
+        <div class="verticalLines">
+            <canvas class="canvasvertical2" width="${width}" height="856"></canvas>             
+        </div>
+    `;
+    verticalLinesDiv.innerHTML = text;
+    SR__block.insertBefore(verticalLinesDiv, lastElement)
+
+    // drawVerticalLines(modifyArray)
 }
 
 
 
-// function getPodCategory() {
-//     let podCategory = document.querySelector(".podCategory");
-    
-// }
-
-// function getPodCategoryVerticalLines() {
-//     let SR__block = document.querySelector(".SR__block");
-//     let podCategory = document.querySelector(".podCategory");
-
-//     let canvashorizontal = document.querySelector(".canvashorizontal")
-//     let width = canvashorizontal.offsetWidth;
-//     let verticalLinesDiv = document.createElement("div");
-//     verticalLinesDiv.className = "verticalLinesDiv";
-
-//     // let height = OtdelKategories.offsetHeight;
-//     let text = `
-//         <div class="verticalLines">
-//             <canvas class="canvasvertical2" width="${width}" height="856"></canvas>             
-//         </div>
-//     `;
-//     verticalLinesDiv.innerHTML = text;
-//     SR__block.insertBefore(verticalLinesDiv, podCategory)
-
-//     // drawVerticalLines(modifyArray)
-// }
-
-
-
-
+function id() {
+    return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
+}
 
 
 

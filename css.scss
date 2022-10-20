@@ -27,6 +27,7 @@
     }
 
     .dontShow {
+        // opacity: 50%;
         visibility: hidden;
     }
    
@@ -78,38 +79,39 @@
         height: 50px;
     }
     
-    .podCategory, .podCategory2 {
+    .podCategory {
         display: flex;
         justify-content: center;
         align-items: flex-start;
-    
-        margin-left: 90px;
+        flex-direction: column;
+        margin-left: 180px;
         .dontShow {
             visibility: hidden;
         }
-        .podOtdels {
+        .podOtdelsFirstKategory, .podOtdelsSecondKategory {
             display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-left: 90px;
-          
-            .podOtdelsSecondKategory {
-                .Otdel {
-                    margin-top: 50px;
-                }
-            }
-            .positions {
-                .Otdel {
-                    margin-top: 50px;
-                }
-            }
         }
+        // .podOtdels {
+        //     display: flex;
+        //     justify-content: center;
+        //     flex-direction: column;
+        //     align-items: flex-start;
+        //     margin-left: 90px;
+          
+        //     .podOtdelsSecondKategory {
+        //         .Otdel {
+        //             margin-top: 50px;
+        //         }
+        //     }
+        //     .positions {
+        //         .Otdel {
+        //             margin-top: 50px;
+        //         }
+        //     }
+        // }
     
     }
-    .podCategory2{
-        margin-left: 180px;
-    }
+
 }
 .Otdel {
     // opacity: 20%;
