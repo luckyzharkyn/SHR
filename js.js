@@ -498,6 +498,7 @@ function activeClass() {
     let otdels = document.querySelectorAll(".OtdelKategories .Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
+            clearPodcategory()
             // ================== скрытие и показ элемента ========================
             getPodCategory(this.id)
             let thisId = this.parentElement.id;
@@ -560,6 +561,7 @@ function RukovodstvoshowAllElements() {
     let otdels = document.querySelectorAll(".Rukovodstvo .Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
+            clearPodcategory()
             let elems = document.querySelectorAll(".slowlyShow");
             
             for(let elem of elems) {
@@ -715,6 +717,18 @@ function getPodCategoryVerticalLines() {
     // drawVerticalLines(modifyArray)
 }
 
+function clearPodcategory() {
+    let SR__block = document.querySelector(".SR__block");
+    let lastElem1 = SR__block.lastElementChild;
+    if(lastElem1.classList.contains("podCategory")) {
+        lastElem1.remove();
+        console.log("this")
+    }
+    let lastElem2 = SR__block.lastElementChild;
+    if(lastElem2.classList.contains("verticalLinesDiv")) {
+        lastElem2.remove()
+    }
+}
 
 
 function id() {
