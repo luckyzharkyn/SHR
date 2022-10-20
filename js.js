@@ -71,27 +71,50 @@ let array = {
     },
     "Rukovodstvo": [
         {
-            id: id(),
+            id: getId(),
             "RukName": "Марат",
             "RukSurname": "Башмаков",
             "RukPosition": "Руководство",
             "subordinate_departments": [
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Шынар",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству башмаков",
                     "subordinate_departments" : [
                         {
-                            id: id(),
+                            id: getId(),
                             "RukName": "Шынар1",
                             "RukSurname": "Акмаралкызы",
                             "RukPosition": "ещё один отдел",
+                            "subordinate_departments" : [
+                                {
+                                    id: getId(),
+                                    "RukName": "Шынар5",
+                                    "RukSurname": "Акмаралкызы",
+                                    "RukPosition": "ещё один отдел",
+                                    "subordinate_departments" : [
+                                        {
+                                            id: getId(),
+                                            "RukName": "Шынар5",
+                                            "RukSurname": "Акмаралкызы",
+                                            "RukPosition": "ещё один отдел",
+                                            
+                                        }
+                                    ],
+                                }
+                            ],
                         }
                     ],
                     "employees": [
                         {
-                            id: id(),
+                            id: getId(),
+                            "RukName": "Шынар2",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "работник",
+                        },
+                        {
+                            id: getId(),
                             "RukName": "Шынар2",
                             "RukSurname": "Акмаралкызы",
                             "RukPosition": "работник",
@@ -99,19 +122,19 @@ let array = {
                     ]
                 },
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Фаргиза",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
                 },
                 {   
-                    id: id(),
+                    id: getId(),
                     "RukName": "Жансая",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
                 },
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Жансая",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
@@ -119,25 +142,25 @@ let array = {
             ]
         }, 
         {
-            id: id(),
+            id: getId(),
             "RukName": "Ерназар",
             "RukSurname": "Кадыров",
             "RukPosition": "Руководство",
             "subordinate_departments": [
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Дина",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству башмаков",
                 },
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Саяжан",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
                 },
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Саяжан",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
@@ -146,31 +169,31 @@ let array = {
             ]
         },
         {
-            id: id(),
+            id: getId(),
             "RukName": "Бахтияр",
             "RukSurname": "Калашников",
             "RukPosition": "Руководство",
             "subordinate_departments": [
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Олжас",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб",
                 },
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Асылбек",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб2",
                 },
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Ольга",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб3",
                 },
                 {
-                    id: id(),
+                    id: getId(),
                     "RukName": "Шынар",
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб3",
@@ -178,7 +201,7 @@ let array = {
             ]
         },
         {
-            id: id(),
+            id: getId(),
             "RukName": "Темирхан",
             "RukSurname": "Кондиционерович",
             "RukPosition": "Руководство",
@@ -189,7 +212,7 @@ let array = {
 }
 // ============== global params =========
 let newArray = getNewArrayOtdels()
-console.log(newArray)
+
 let verticalLinesHeight = 50;
 // ============== global params =========
 
@@ -200,7 +223,6 @@ function Start() {
     getCanvasVerticalLines();
     activeClass()
     RukovodstvoshowAllElements()
-    AllOtdelsPositionAbsolute()
 }
 Start();
 
@@ -305,6 +327,7 @@ function getAllOtdels(id, name, surname, position, subordinate_departments, empl
     let textSubsubordinate_departments = "";
     if(subordinate_departments != undefined) {
         for(let i = 0; i < subordinate_departments.length; i++) {
+            console.log(subordinate_departments.length)
             let temp = getAllOtdels(subordinate_departments[i].id, subordinate_departments[i].RukName, subordinate_departments[i].RukSurname, subordinate_departments[i].RukPosition, subordinate_departments[i].subordinate_departments, subordinate_departments[i].employees)
             textSubsubordinate_departments += temp;
         }
@@ -316,9 +339,9 @@ function getAllOtdels(id, name, surname, position, subordinate_departments, empl
             textEmployee += getEmployee(employees[i].id, employees[i].RukName, employees[i].RukSurname, employees[i].RukPosition)
         }
     }
-
+    let tempId = getId()
     return `
-        <div class="${status}">
+        <div class="${status}" id="${tempId}">
             <div class="Otdel" ${textId}>
                 <div class="rukovodstvo">
                     <div class="SR_card">
@@ -413,8 +436,7 @@ function getOtdels() {
             }
         }
         if(text) {
-            secondKategory.style.marginLeft = "100px";
-            secondKategory.id = id()
+            secondKategory.id = getId()
             secondKategory.innerHTML = text;
             
             BigBlock.appendChild(secondKategory);
@@ -557,7 +579,19 @@ function activeClass() {
                 }
 
             }
-            // for(let elem of )
+            let AllOtdelsid = this.parentElement.id;
+            console.log(AllOtdelsid)
+            let parent = this.parentElement.parentElement;
+            let childrens = parent.children;
+            for(let i = 0; i < childrens.length; i++) {
+                if(childrens[i].classList.contains("AllOtdels")) {
+                    if(childrens[i].id !== AllOtdelsid) {
+                    if(!childrens[i].classList.contains("slowlyShow")) {
+                        childrens[i].classList.add("dontShow")
+                    }
+                }
+                }
+            }
             // ================== скрытие и показ элемента ========================
 
             // ================== регуляровка линии =================
@@ -586,38 +620,7 @@ function activeClass() {
     }
 }
 
-function AllOtdelsPositionAbsolute() {
-    // ================== AllOtdels становится absolute ==============
-        let AllOtdels = document.querySelectorAll(".AllOtdels")
-        for(let i = 0; i < AllOtdels.length; i++) {
-            AllOtdels[i].addEventListener("click", function() {
-                let parent = this.parentElement;
-                
-                let width = parent.offsetWidth;
-                let childrens = parent.children;
 
-                let arr = [];
-                for(let i = 0; i < childrens.length; i++) {
-                    let arr2 = []
-                    let left = childrens[i].offsetLeft + 25;
-                    let top = childrens[i].offsetTop;
-                    arr2.push(left)
-                    arr2.push(top)
-                    arr.push(arr2)
-                }
-                for(let i = 0; i < arr.length; i++) {
-                    childrens[i].style.left = `${arr[i][0]}px`
-                    childrens[i].style.top = `${arr[i][1]}px`
-                    childrens[i].classList.add("posAbsolute")
-                }
-                parent.style.width = `${width}px`
-                console.log(parent.style.width)
-            })
-        }
-
-
-    // ================== AllOtdels становится absolute ==============
-}
 
 function RukovodstvoshowAllElements() {
     let otdels = document.querySelectorAll(".Rukovodstvo .Otdel");
@@ -646,7 +649,7 @@ function RukovodstvoshowAllElements() {
     
 }
 
-function id() {
+function getId() {
     return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
 }
 

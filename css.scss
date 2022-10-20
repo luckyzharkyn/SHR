@@ -51,8 +51,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            position: relative;
-            // margin-left: 100px;
+            margin-left: 90px;
          
         }
         .secondKategory {
@@ -130,16 +129,13 @@
 .AllOtdels {
     // margin-left: 200px;
     .PodCategories {
+        // margin-left: 100px;
         .subcategories {
             margin-left: 50px;
         }
         .employees {
-            // margin-left: 100px;
+            margin-left: 100px;
         }
     }
 
-}
-
-.posAbsolute {
-    position: absolute;
 }
