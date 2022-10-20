@@ -1,9 +1,17 @@
-let canvasvertical = document.querySelector('.canvasvertical').getContext('2d');
-    canvasvertical.beginPath();
+function test(count=0) {
+    if(count == 3) {
+        return null
+    } else {
+        count += 1;
+        console.log(count)
+        let result = test(count)
+        if(result == null) {
+            return result
+        } else {
+            return `hello world  ${count}`
+        }
+    }
 
-    canvasvertical.lineWidth = 10; //толщина 5px
+}
 
-    canvasvertical.moveTo(0, 100);
-    canvasvertical.lineTo(0, 500);
-
-    canvasvertical.stroke();
+console.log(test())

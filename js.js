@@ -86,7 +86,7 @@ let array = {
                             id: id(),
                             "RukName": "Шынар1",
                             "RukSurname": "Акмаралкызы",
-                            "RukPosition": "Отдел по производству башмаков",
+                            "RukPosition": "ещё один отдел",
                         }
                     ],
                     "employees": [
@@ -94,7 +94,7 @@ let array = {
                             id: id(),
                             "RukName": "Шынар2",
                             "RukSurname": "Акмаралкызы",
-                            "RukPosition": "Отдел по производству башмаков",
+                            "RukPosition": "работник",
                         }
                     ]
                 },
@@ -189,6 +189,7 @@ let array = {
 }
 // ============== global params =========
 let newArray = getNewArrayOtdels()
+console.log(newArray)
 let verticalLinesHeight = 50;
 // ============== global params =========
 
@@ -199,8 +200,7 @@ function Start() {
     getCanvasVerticalLines();
     activeClass()
     RukovodstvoshowAllElements()
-    // =========== 
-    getPodCategoryVerticalLines()
+    AllOtdelsPositionAbsolute()
 }
 Start();
 
@@ -271,7 +271,6 @@ function setCanvasHorizontal(width, RukovodstvoSize) {
     // =============== подлинии =====================
     ctxHorizontal.stroke();
 }
-
 function getOtdel(id, name, surname, position) {
     let textId = "";
     let status = "Otdel"
@@ -293,6 +292,68 @@ function getOtdel(id, name, surname, position) {
         </div>
     `
 }
+function getAllOtdels(id, name, surname, position, subordinate_departments, employees) {
+    let textId = "";
+    let status = "AllOtdels"
+    if(id != undefined) {
+        textId = `id=${id}`
+    }
+    if(name == undefined || surname == undefined || position == undefined) {
+        status = "dontShow";
+    }
+
+    let textSubsubordinate_departments = "";
+    if(subordinate_departments != undefined) {
+        for(let i = 0; i < subordinate_departments.length; i++) {
+            let temp = getAllOtdels(subordinate_departments[i].id, subordinate_departments[i].RukName, subordinate_departments[i].RukSurname, subordinate_departments[i].RukPosition, subordinate_departments[i].subordinate_departments, subordinate_departments[i].employees)
+            textSubsubordinate_departments += temp;
+        }
+    }
+
+    let textEmployee = ""
+    if(employees != undefined) {
+        for(let i = 0; i < employees.length; i++) {
+            textEmployee += getEmployee(employees[i].id, employees[i].RukName, employees[i].RukSurname, employees[i].RukPosition)
+        }
+    }
+
+    return `
+        <div class="${status}">
+            <div class="Otdel" ${textId}>
+                <div class="rukovodstvo">
+                    <div class="SR_card">
+                        <p>${name}</p>
+                        <p>${surname}</p>
+                        <p>${position}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="PodCategories slowlyShow">
+                <div class="subcategories">
+                    ${textSubsubordinate_departments}
+                </div>
+                <div class="employees">
+                    ${textEmployee}
+                </div>
+            </div>
+        </div>
+    `
+}
+
+function getEmployee(id, name, surname, position) {
+    return `
+        <div class="Employee" ${id}>
+            <div class="rukovodstvo">
+                <div class="SR_card">
+                    <p>${name}</p>
+                    <p>${surname}</p>
+                    <p>${position}</p>
+                </div>
+            </div>
+        </div>
+    `
+}
+
 
 function getNewArrayOtdels() {
     let rukLenght = array.Rukovodstvo.length;
@@ -348,10 +409,11 @@ function getOtdels() {
 
         for(let j = 0; j < newArr[i].length; j++) {
             if(newArr[i].length) {
-                text += getOtdel(newArr[i][j].id, newArr[i][j].RukName, newArr[i][j].RukSurname, newArr[i][j].RukPosition);
+                text += getAllOtdels(newArr[i][j].id, newArr[i][j].RukName, newArr[i][j].RukSurname, newArr[i][j].RukPosition, newArr[i][j].subordinate_departments, newArr[i][j].employees);
             }
         }
         if(text) {
+            secondKategory.style.marginLeft = "100px";
             secondKategory.id = id()
             secondKategory.innerHTML = text;
             
@@ -386,7 +448,7 @@ function getCanvasVerticalLines(modifyArray) {
 
 function drawVerticalLines(modifyArray=newArray) {
     // функция рисует линии между первым рук и руководством
-    let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .Otdel")
+    let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .AllOtdels .Otdel")
     let otdelHeightSize = otdel.offsetHeight;   // высота одного отдела
     let halfOtdelHeightSize = otdelHeightSize / 2; // половина высоты отдела
     let heightEndPoint = verticalLinesHeight + halfOtdelHeightSize; // конечная точка для первого отдела(середина отдела)
@@ -394,7 +456,7 @@ function drawVerticalLines(modifyArray=newArray) {
 
     let firstKategory = document.querySelector(".firstKategory")
     let firstKategoryHeight = firstKategory.offsetHeight + verticalLinesHeight;   // высота блока firstKategory
-    let gap = firstKategoryHeight - otdelHeightSize;   // зазор между отделами(вертикально)
+    let gap = 50  // зазор между отделами(вертикально)
 
     let canvasvertical = document.querySelector('.canvasvertical').getContext('2d');
     canvasvertical.beginPath();
@@ -443,9 +505,11 @@ function activeClass() {
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
             // ================== скрытие и показ элемента ========================
-            let thisId = this.parentElement.id;
+            let thisId = this.parentElement.parentElement.id;
             let bool2 = false;
             let OtdelKategories = document.querySelector(".OtdelKategories").children;
+            let PodCategories = document.querySelectorAll(".PodCategories");
+
             for(let elem of OtdelKategories) {
                 if(elem.classList.contains("slowlyShow")) {
                     if(elem.id === thisId) {
@@ -454,8 +518,14 @@ function activeClass() {
                     }
                     if(bool2) {
                         elem.classList.add("slowlyShow")
+                        for(let el of PodCategories) {
+                            el.classList.add("slowlyShow")
+                        }
                         setTimeout(() => {
                             elem.className = "slowlyShow"
+                            for(let el of PodCategories) {
+                                el.classList.className = "slowlyShow"
+                            }
                         }, 500);
                     }
                 } else {
@@ -465,12 +535,29 @@ function activeClass() {
                     }
                     if(bool2) {
                         elem.classList.add("slowlyShow")
+                        for(let el of PodCategories) {
+                            el.classList.add("slowlyShow")
+                        }
                         setTimeout(() => {
                             elem.className = "slowlyShow"
+                            for(let el of PodCategories) {
+                                el.classList.className = "slowlyShow"
+                            }
                         }, 500);
                     }
                 }
             }
+         
+            if(otdel.id == this.id) {
+                let thisPodCategories = this.nextElementSibling;
+                if(thisPodCategories.classList.contains("slowlyShow")) {
+                    thisPodCategories.classList.remove("slowlyShow")
+                    thisPodCategories.classList.add("slowlyView")
+                    thisPodCategories.classList.add("PodCategories")
+                }
+
+            }
+            // for(let elem of )
             // ================== скрытие и показ элемента ========================
 
             // ================== регуляровка линии =================
@@ -499,17 +586,53 @@ function activeClass() {
     }
 }
 
+function AllOtdelsPositionAbsolute() {
+    // ================== AllOtdels становится absolute ==============
+        let AllOtdels = document.querySelectorAll(".AllOtdels")
+        for(let i = 0; i < AllOtdels.length; i++) {
+            AllOtdels[i].addEventListener("click", function() {
+                let parent = this.parentElement;
+                
+                let width = parent.offsetWidth;
+                let childrens = parent.children;
+
+                let arr = [];
+                for(let i = 0; i < childrens.length; i++) {
+                    let arr2 = []
+                    let left = childrens[i].offsetLeft + 25;
+                    let top = childrens[i].offsetTop;
+                    arr2.push(left)
+                    arr2.push(top)
+                    arr.push(arr2)
+                }
+                for(let i = 0; i < arr.length; i++) {
+                    childrens[i].style.left = `${arr[i][0]}px`
+                    childrens[i].style.top = `${arr[i][1]}px`
+                    childrens[i].classList.add("posAbsolute")
+                }
+                parent.style.width = `${width}px`
+                console.log(parent.style.width)
+            })
+        }
+
+
+    // ================== AllOtdels становится absolute ==============
+}
+
 function RukovodstvoshowAllElements() {
     let otdels = document.querySelectorAll(".Rukovodstvo .Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
             let elems = document.querySelectorAll(".slowlyShow");
-            
+            let PodCategories = document.querySelectorAll(".PodCategories");
             for(let elem of elems) {
                 
                 elem.classList.remove("slowlyShow")
                 elem.classList.add("slowlyView")
                 elem.classList.add("secondKategory")
+            }
+            for(let elem of PodCategories) {
+                elem.classList = "slowlyShow"
             }
 
 
@@ -527,33 +650,6 @@ function id() {
     return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
 }
 
-
-
-function getPodCategory() {
-    let podCategory = document.querySelector(".podCategory");
-    
-}
-
-function getPodCategoryVerticalLines() {
-    let SR__block = document.querySelector(".SR__block");
-    let podCategory = document.querySelector(".podCategory");
-
-    let canvashorizontal = document.querySelector(".canvashorizontal")
-    let width = canvashorizontal.offsetWidth;
-    let verticalLinesDiv = document.createElement("div");
-    verticalLinesDiv.className = "verticalLinesDiv";
-
-    // let height = OtdelKategories.offsetHeight;
-    let text = `
-        <div class="verticalLines">
-            <canvas class="canvasvertical2" width="${width}" height="856"></canvas>             
-        </div>
-    `;
-    verticalLinesDiv.innerHTML = text;
-    SR__block.insertBefore(verticalLinesDiv, podCategory)
-
-    // drawVerticalLines(modifyArray)
-}
 
 
 

@@ -51,8 +51,9 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            margin-left: 90px;
-          
+            position: relative;
+            // margin-left: 100px;
+         
         }
         .secondKategory {
             .Otdel {
@@ -78,42 +79,67 @@
         height: 50px;
     }
     
-    .podCategory, .podCategory2 {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
+    // .podCategory {
+    //     display: flex;
+    //     justify-content: center;
+    //     align-items: flex-start;
     
-        margin-left: 90px;
-        .dontShow {
-            visibility: hidden;
-        }
-        .podOtdels {
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-left: 90px;
+    //     margin-left: 90px;
+    //     .dontShow {
+    //         visibility: hidden;
+    //     }
+    //     .podOtdels {
+    //         display: flex;
+    //         justify-content: center;
+    //         flex-direction: column;
+    //         align-items: flex-start;
+    //         margin-left: 90px;
           
-            .podOtdelsSecondKategory {
-                .Otdel {
-                    margin-top: 50px;
-                }
-            }
-            .positions {
-                .Otdel {
-                    margin-top: 50px;
-                }
-            }
-        }
+    //         .podOtdelsSecondKategory {
+    //             .Otdel {
+    //                 margin-top: 50px;
+    //             }
+    //         }
+    //         .positions {
+    //             .Otdel {
+    //                 margin-top: 50px;
+    //             }
+    //         }
+    //     }
     
-    }
-    .podCategory2{
-        margin-left: 180px;
-    }
+    // }
+    // .podCategory2{
+    //     margin-left: 180px;
+    // }
 }
 .Otdel {
     // opacity: 20%;
 }
 .active {
     border: 3px solid yellow;
+}
+
+.AllOtdels {
+    display: flex;
+    flex-direction: column;
+}
+
+.employee {
+
+}
+.AllOtdels {
+    // margin-left: 200px;
+    .PodCategories {
+        .subcategories {
+            margin-left: 50px;
+        }
+        .employees {
+            // margin-left: 100px;
+        }
+    }
+
+}
+
+.posAbsolute {
+    position: absolute;
 }
