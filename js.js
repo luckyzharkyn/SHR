@@ -529,31 +529,31 @@ function id() {
 
 
 
-function getPodCategory() {
-    let podCategory = document.querySelector(".podCategory");
+// function getPodCategory() {
+//     let podCategory = document.querySelector(".podCategory");
     
-}
+// }
 
-function getPodCategoryVerticalLines() {
-    let SR__block = document.querySelector(".SR__block");
-    let podCategory = document.querySelector(".podCategory");
+// function getPodCategoryVerticalLines() {
+//     let SR__block = document.querySelector(".SR__block");
+//     let podCategory = document.querySelector(".podCategory");
 
-    let canvashorizontal = document.querySelector(".canvashorizontal")
-    let width = canvashorizontal.offsetWidth;
-    let verticalLinesDiv = document.createElement("div");
-    verticalLinesDiv.className = "verticalLinesDiv";
+//     let canvashorizontal = document.querySelector(".canvashorizontal")
+//     let width = canvashorizontal.offsetWidth;
+//     let verticalLinesDiv = document.createElement("div");
+//     verticalLinesDiv.className = "verticalLinesDiv";
 
-    // let height = OtdelKategories.offsetHeight;
-    let text = `
-        <div class="verticalLines">
-            <canvas class="canvasvertical2" width="${width}" height="856"></canvas>             
-        </div>
-    `;
-    verticalLinesDiv.innerHTML = text;
-    SR__block.insertBefore(verticalLinesDiv, podCategory)
+//     // let height = OtdelKategories.offsetHeight;
+//     let text = `
+//         <div class="verticalLines">
+//             <canvas class="canvasvertical2" width="${width}" height="856"></canvas>             
+//         </div>
+//     `;
+//     verticalLinesDiv.innerHTML = text;
+//     SR__block.insertBefore(verticalLinesDiv, podCategory)
 
-    // drawVerticalLines(modifyArray)
-}
+//     // drawVerticalLines(modifyArray)
+// }
 
 
 
