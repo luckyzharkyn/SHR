@@ -341,7 +341,7 @@ function getOtdel(id, name, surname, position, status="Otdel") {
         status = "dontShow";
     }
     return `
-        <div class="${status}" ${textId} onClick="func(id)">
+        <div class="${status}" ${textId}>
             <div class="rukovodstvo">
                 <div class="SR_card">
                     <div>
@@ -357,82 +357,7 @@ function getOtdel(id, name, surname, position, status="Otdel") {
         </div>
     `
 }
-function func(id) {
-    let otdels = document.querySelectorAll(".BigBlockPodcategory .Otdel")
-    
-    for(let i = 0; i < otdels.length; i++) {
-        otdels[i].addEventListener("click", function() {
-            if(this.id === id) {
-                if(BigBlockPodcategoryID.length > 0) {
-                    for(let i = 0; i < BigBlockPodcategoryID.length; i++) {
-                        if(id === BigBlockPodcategoryID[i]) {
-                            // BigBlockPodcategoryID.splice(i, 1);
-                        } else {
-                            if(BigBlockPodcategoryID.length - 1 == i) {
-                                let result = getArrayPodcategory(id, array.Rukovodstvo);
-                                if(result[0] != null) {
-                                    if(result[0].length > 0) {
-                                        BigBlockPodcategoryID.push(id);
 
-                                        let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
-                                        let childrens = BigBlockPodcategory.children;
-                                        let parentId = this.parentElement.parentElement.id
-                        
-                                        let bool = false;
-                                        for(let i = 0; i < childrens.length; i++) {
-                                            if(parentId === childrens[i].id) {
-                                                bool = true;
-                                                continue;
-                                            } else {
-                                                if(bool) {
-                                                    childrens[i].classList.add("slowlyShow")
-                                                    setTimeout(() => {
-                                                        childrens[i].className = "slowlyShow";
-                                                    }, 500);
-                                                }
-                                            }
-                                        }
-                                        
-                                        getPodCategory(id);
-                                }
-                        }
-                            }
-                        }
-                    }
-                } else {
-                        let result = getArrayPodcategory(id, array.Rukovodstvo);
-                        if(result[0] != null) {
-                            if(result[0].length > 0) {
-                                BigBlockPodcategoryID.push(id);
-
-                                let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
-                                let childrens = BigBlockPodcategory.children;
-                                let parentId = this.parentElement.parentElement.id
-                
-                                let bool = false;
-                                for(let i = 0; i < childrens.length; i++) {
-                                    if(parentId === childrens[i].id) {
-                                        bool = true;
-                                        continue;
-                                    } else {
-                                        if(bool) {
-                                            childrens[i].classList.add("slowlyShow")
-                                            setTimeout(() => {
-                                                childrens[i].className = "slowlyShow";
-                                            }, 500);
-                                        }
-                                    }
-                                }
-                                
-                                getPodCategory(id);
-                            }
-                        }
-                }
-                
-            }
-        })
-    }
-}
 function getNewArrayOtdels() {
     // метод, которая возвращает массив в массиве, чтобы рисовать отделы, курируемые руководством
     // метод возвращает массав такого типа [ ["", {}, {}, ""], ["", {}, "", ""] ] 
@@ -528,16 +453,12 @@ function getCanvasVerticalLines(modifyArray) {
 
 
 function drawVerticalLines(modifyArray=newArray) {
-    console.log(modifyArray)
     // функция рисует линии между руководством и отделами
     let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .Otdel") // берем все отделы
     let otdelHeightSize = otdel.offsetHeight;   // высота одного отдела
     let halfOtdelHeightSize = otdelHeightSize / 2; // половина высоты отдела
     let heightEndPoint = verticalLinesHeight + halfOtdelHeightSize; // конечная точка для первого отдела(середина отдела)
     let otdelRukWidth = document.querySelector(".BigBlock .OtdelsRukovodstvo .Rukovodstvo .Otdel").offsetWidth; // ширина отдела
-    console.log(otdel.id)
-    console.log(otdelHeightSize)
-    console.log(halfOtdelHeightSize)
     let firstKategory = document.querySelector(".firstKategory")
     let firstKategoryHeight = firstKategory.offsetHeight + verticalLinesHeight;   // высота блока firstKategory
     let gap = firstKategoryHeight - otdelHeightSize;   // зазор между отделами(вертикально)
@@ -590,6 +511,7 @@ function activeClass() {
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
             if(OtdelKategoriesID == this.id) {
+                BigBlockPodcategoryID.length = 0;
                 showAll();
                 OtdelKategoriesID = null;
             } else {
@@ -803,16 +725,90 @@ function getPodCategory(otdelId) {
                     
                     PodCategory.appendChild(podOtdelsSecondKategory);
                     BigBlockPodcategory.appendChild(PodCategory)
-                
                     getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) // вызываем метод для рисовки линии
                 }
         
             }
             marginL += 45;
+            addEventPodcategory() // добавляем событие при клике 
         }
-    }     
+    } 
+       
 }
+function addEventPodcategory() {
+    let otdels = document.querySelectorAll(".BigBlockPodcategory .Otdel")
+    
+    for(let i = 0; i < otdels.length; i++) {
+        otdels[i].addEventListener("click", function() {
+            let id = this.id;
+            if(BigBlockPodcategoryID.length > 0) {
+                for(let j = 0; j < BigBlockPodcategoryID.length; j++) {
+                    if(id === BigBlockPodcategoryID[j]) {
+                        // BigBlockPodcategoryID.splice(i, 1); // написать реализацию возвращения на исходную
+                    } else {
+                        if(BigBlockPodcategoryID.length - 1 == j) {
+                            let result = getArrayPodcategory(id, array.Rukovodstvo);
+                            if(result[0] != null) {
+                                if(result[0].length > 0) {
+                                    BigBlockPodcategoryID.push(id);
 
+                                    let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+                                    let childrens = BigBlockPodcategory.children;
+                                    let parentId = this.parentElement.parentElement.id
+                    
+                                    let bool = false;
+                                    for(let k = 0; k < childrens.length; k++) {
+                                        if(parentId === childrens[k].id) {
+                                            bool = true;
+                                            continue;
+                                        } else {
+                                            if(bool) {
+                                                childrens[k].classList.add("slowlyShow")
+                                                setTimeout(() => {
+                                                    childrens[k].className = "slowlyShow";
+                                                }, 500);
+                                            }
+                                        }
+                                    }
+                                    
+                                    getPodCategory(id);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                let result = getArrayPodcategory(id, array.Rukovodstvo);
+                if(result[0] != null) {
+                    if(result[0].length > 0) {
+                        BigBlockPodcategoryID.push(id);
+
+                        let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+                        let childrens = BigBlockPodcategory.children;
+                        let parentId = this.parentElement.parentElement.id
+        
+                        let bool = false;
+                        for(let i = 0; i < childrens.length; i++) {
+                            if(parentId === childrens[i].id) {
+                                bool = true;
+                                continue;
+                            } else {
+                                if(bool) {
+                                    childrens[i].classList.add("slowlyShow")
+                                    setTimeout(() => {
+                                        childrens[i].className = "slowlyShow";
+                                    }, 500);
+                                }
+                            }
+                        }
+                        
+                        getPodCategory(id);
+                    }
+                }
+            }
+        })
+    }
+}
 function getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) {
     // метод вставляет канвас перед подотделом, чтобы потом нарисовать линии
     let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
