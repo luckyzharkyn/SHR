@@ -240,6 +240,7 @@ let verticalLinesHeight = 50;   // размер div контейнера vertica
 let thickness = 2; // толщина линии
 let rukLenght = array.Rukovodstvo.length; // длина руководства
 let newArray = getNewArrayOtdels()  // в переменную ложим массив в массиве для рисовки отделов
+let differentName = 1; // разные названия для verticalLines
 // ============== global params =========
 
 function Start() {
@@ -325,10 +326,9 @@ function setCanvasHorizontal(width, RukovodstvoSize) {
     ctxHorizontal.stroke();
 }
 
-function getOtdel(id, name, surname, position) {
+function getOtdel(id, name, surname, position, status="Otdel") {
     // функция рисует отделы. Все отделы
     let textId = ""; // если id не передано, то id не вставляется
-    let status = "Otdel" // название класса по умолчанию
     if(id != undefined) {
         textId = `id=${id}`
     }
@@ -673,14 +673,18 @@ function getFindObj(id, subordinate_departments) {
         }
 }
 
-function getPodCategory(id) {
+function getPodCategory(otdelId) {
     // метод рисует отделы подкатегории
-    let SR__block = document.querySelector(".SR__block");
-   let PodCategory = document.createElement("div");
-   PodCategory.className = "podCategory";
-   let result = getArrayPodcategory(id, array.Rukovodstvo) // получаем массив в массиве
-         
-   for(let i = 0; i < result.length; i++) {
+    let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+    let result = getArrayPodcategory(otdelId, array.Rukovodstvo) // получаем массив в массиве
+    let bool = false;
+    let marginLeft = 90;
+    for(let i = 0; i < result.length; i++) {
+        if(result.length - 1 == i) {
+            bool = true
+        }
+       let PodCategory = document.createElement("div");
+       PodCategory.className = "podCategory";
         let text = "";
         let podOtdelsSecondKategory = document.createElement("div");
         
@@ -695,53 +699,85 @@ function getPodCategory(id) {
         }
 
         if(text) {
-            // podOtdelsSecondKategory.id = id()
+            PodCategory.id = id()
             podOtdelsSecondKategory.innerHTML = text;
             
             PodCategory.appendChild(podOtdelsSecondKategory);
+            BigBlockPodcategory.appendChild(PodCategory)
+        
+            getPodCategoryVerticalLines(bool) // вызываем метод для рисовки линии
         }
 
     }
 
-    SR__block.appendChild(PodCategory)
-
-    getPodCategoryVerticalLines() // вызываем метод для рисовки линии
 }
 
-function getPodCategoryVerticalLines() {
+function getPodCategoryVerticalLines(bool) {
     // метод вставляет канвас перед подотделом, чтобы потом нарисовать линии
-    let SR__block = document.querySelector(".SR__block");
-    let lastElement = SR__block.lastElementChild;
+    let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+    let lastElement = BigBlockPodcategory.lastElementChild;
 
     let canvashorizontal = document.querySelector(".canvashorizontal")
     let width = canvashorizontal.offsetWidth;
     let verticalLinesDiv = document.createElement("div");
     verticalLinesDiv.className = "verticalLinesDiv";
 
-    // let height = OtdelKategories.offsetHeight;
+    let otdelHeight = document.querySelector(".BigBlockPodcategory .Otdel")
+    let height = otdelHeight.offsetHeight;
+    differentName++;
     let text = `
         <div class="verticalLines">
-            <canvas class="canvasvertical2" width="${width}" height="856"></canvas>             
+            <canvas class="canvasvertical${differentName}" width="${width}" height="${height + verticalLinesHeight}"></canvas>             
         </div>
     `;
     verticalLinesDiv.innerHTML = text;
-    SR__block.insertBefore(verticalLinesDiv, lastElement)
+    BigBlockPodcategory.insertBefore(verticalLinesDiv, lastElement)
 
-    // drawVerticalLines(modifyArray)
+    drawVerticalLinesForPodCategory(bool)
+}
+
+function drawVerticalLinesForPodCategory(bool) {
+    if(!bool) {
+        let canvasverticalPodcategory = document.querySelector(`.canvasvertical${differentName}`).getContext('2d');
+        canvasverticalPodcategory.beginPath();
+        canvasverticalPodcategory.lineWidth = thickness; //толщина px
+        // ================================================================
+        // вертикальная линия
+        canvasverticalPodcategory.moveTo(470, 0);
+        canvasverticalPodcategory.lineTo(470, 260);
+        
+        //  первая короткая горизонтальная линия
+        canvasverticalPodcategory.moveTo(470, 140);
+        canvasverticalPodcategory.lineTo(490, 140);
+        canvasverticalPodcategory.stroke();
+    } else {
+        let canvasverticalPodcategory = document.querySelector(`.canvasvertical${differentName}`).getContext('2d');
+        canvasverticalPodcategory.beginPath();
+        canvasverticalPodcategory.lineWidth = thickness; //толщина px
+        // ================================================================
+        // вертикальная линия
+        canvasverticalPodcategory.moveTo(470, 0);
+        canvasverticalPodcategory.lineTo(470, 140);
+        
+        //  первая короткая горизонтальная линия
+        canvasverticalPodcategory.moveTo(470, 140);
+        canvasverticalPodcategory.lineTo(490, 140);
+        canvasverticalPodcategory.stroke();
+    }
 }
 
 function clearPodcategory() {
     // метод полностью удаляет подкатегорию
-    let SR__block = document.querySelector(".SR__block");
-    let lastElem1 = SR__block.lastElementChild;
-    if(lastElem1.classList.contains("podCategory")) {
-        lastElem1.remove();
-        console.log("this")
-    }
-    let lastElem2 = SR__block.lastElementChild;
-    if(lastElem2.classList.contains("verticalLinesDiv")) {
-        lastElem2.remove()
-    }
+    // let SR__block = document.querySelector(".SR__block");
+    // let lastElem1 = SR__block.lastElementChild;
+    // if(lastElem1.classList.contains("podCategory")) {
+    //     lastElem1.remove();
+    //     console.log("this")
+    // }
+    // let lastElem2 = SR__block.lastElementChild;
+    // if(lastElem2.classList.contains("verticalLinesDiv")) {
+    //     lastElem2.remove()
+    // }
 }
 
 
