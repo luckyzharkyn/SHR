@@ -174,6 +174,14 @@ let array = {
                             "RukPosition": "Отдел по производству носков",
                         },
                        
+                    ],
+                    "employees": [
+                        {
+                            id: id(),
+                            "RukName": "Шынар2",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "должность",
+                        }
                     ]
                 },
                 {
