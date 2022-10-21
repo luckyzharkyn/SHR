@@ -112,18 +112,6 @@ let array = {
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
                 },
-                {   
-                    id: id(),
-                    "RukName": "Жансая",
-                    "RukSurname": "Сандугашова",
-                    "RukPosition": "Отдел по производству носков",
-                },
-                {
-                    id: id(),
-                    "RukName": "Жансая",
-                    "RukSurname": "Сандугашова",
-                    "RukPosition": "Отдел по производству носков",
-                }
             ]
         }, 
         {
@@ -227,12 +215,6 @@ let array = {
                     "RukSurname": "Акмаралкызы",
                     "RukPosition": "Отдел по производству труб3",
                 },
-                {
-                    id: id(),
-                    "RukName": "Шынар",
-                    "RukSurname": "Акмаралкызы",
-                    "RukPosition": "Отдел по производству труб3",
-                },
             ]
         },
         {
@@ -246,29 +228,32 @@ let array = {
 
 }
 // ============== global params =========
-let newArray = getNewArrayOtdels()
-let verticalLinesHeight = 50;
+let verticalLinesHeight = 50;   // размер div контейнера verticalLines
+let thickness = 2; // толщина линии
+let rukLenght = array.Rukovodstvo.length; // длина руководства
+let newArray = getNewArrayOtdels()  // в переменную ложим массив в массиве для рисовки отделов
 // ============== global params =========
 
 function Start() {
-    getRukovodstvo(array.Rukovodstvo)
-    getHorizontalLines();
-    getOtdels()
-    getCanvasVerticalLines();
-    activeClass()
-    RukovodstvoshowAllElements()
+    getRukovodstvo(array.Rukovodstvo)  // метод для отрисовки руководства
+    getHorizontalLines(); // метод для вставки канваса
+    getOtdels() // метод рисует отделы руководства
+    getCanvasVerticalLines(); // метод рисует линии между рук и отделами
+    activeClass() // добавляет событие на отделы
+    RukovodstvoshowAllElements() // добавляет событие на руководства
 }
 Start();
 
-
+// рисует вертикальную линию между госорганом и первым руководителем
 let ctx = document.querySelector('.canvas1').getContext('2d');
 ctx.beginPath();
-ctx.lineWidth = 2; //толщина 5px
+ctx.lineWidth = thickness; //толщина px
 ctx.moveTo(150, 0);
 ctx.lineTo(150, 50);
 ctx.stroke();
 
 function getRukovodstvo(arr) {
+    // метод для отрисовки руководства
     let OtdelsRukovodstvo = document.querySelector(".OtdelsRukovodstvo");
     let Rukovodstvo = document.createElement("div");
     Rukovodstvo.className = "Rukovodstvo";
@@ -276,24 +261,25 @@ function getRukovodstvo(arr) {
     for(let i = 0; i < arr.length; i++) {    
         text += getOtdel(arr[i].id, arr[i].RukName, arr[i].RukSurname, arr[i].RukPosition);
     }
-    Rukovodstvo.innerHTML = text;
+    Rukovodstvo.innerHTML = text; // здесь внутрь ложим текст
     OtdelsRukovodstvo.appendChild(Rukovodstvo);
 }
 
 function getHorizontalLines() {
+    // метод для вставки канваса между первым руководителем и руководством
     let OtdelsRukovodstvo = document.querySelector(".OtdelsRukovodstvo");
     let horizontalLines = document.createElement("div");
     horizontalLines.className = "horizontalLines";
     let Rukovodstvo = document.querySelector(".Rukovodstvo");
-    let RukovodstvoSize = array.Rukovodstvo.length;
+    let RukovodstvoSize = rukLenght; // берем длину массива руководства
     
-    let width = Rukovodstvo.offsetWidth;
+    let width = Rukovodstvo.offsetWidth; // ширина контейнера руководства
     let text = `
         <canvas class="canvashorizontal" width="${width}" height="100"></canvas>              
     `;
     horizontalLines.innerHTML = text;
-    OtdelsRukovodstvo.prepend(horizontalLines);
-    setCanvasHorizontal(width, RukovodstvoSize)
+    OtdelsRukovodstvo.prepend(horizontalLines); // канвас ложим в начало контейнера 
+    setCanvasHorizontal(width, RukovodstvoSize) // вызываем метод, который нарисует линии
 }
 function setCanvasHorizontal(width, RukovodstvoSize) {
     // функция рисует линии между первым рук и руководством
@@ -303,10 +289,12 @@ function setCanvasHorizontal(width, RukovodstvoSize) {
     let ctxHorizontal = document.querySelector('.canvashorizontal').getContext('2d');
     ctxHorizontal.beginPath();
 
-    ctxHorizontal.lineWidth = 2; //толщина 2px
+    ctxHorizontal.lineWidth = thickness; //толщина px
     // вертикальная линия
-    let valueCenterBlock = width/2;    // центр блока
+    let valueCenterBlock = width/2;    // центр блока контейнера
     let centerOneOtdel = otdelSize / 2; // центр ширины одного отдела
+    // ===================== горизонтальные линии слева и справа =================
+    // вертикальная линия
     ctxHorizontal.moveTo(valueCenterBlock, 0);
     ctxHorizontal.lineTo(valueCenterBlock, 50);
     // горизонтальная линия справа
@@ -316,25 +304,28 @@ function setCanvasHorizontal(width, RukovodstvoSize) {
     // горизонтальная линия слева
     ctxHorizontal.moveTo(valueCenterBlock, 50);
     ctxHorizontal.lineTo(valueEndPoint, 50);
+    // ===================== горизонтальные линии слева и справа =================
 
     // =============== подлинии =====================
-    let valueStartPoint = centerOneOtdel;
+    let valueStartPoint = centerOneOtdel; // начальная точка центр первого отдела слева
     for(let i = 0; i < RukovodstvoSize; i++) {
         ctxHorizontal.moveTo(valueStartPoint, 100);
         ctxHorizontal.lineTo(valueStartPoint, 50);
-        valueStartPoint += otdelSize;
+        valueStartPoint += otdelSize; // добавляем размер одного отдела, чтобы след линия нарисовалась для след отдела
     }
     // =============== подлинии =====================
     ctxHorizontal.stroke();
 }
 
 function getOtdel(id, name, surname, position) {
-    let textId = "";
-    let status = "Otdel"
+    // функция рисует отделы. Все отделы
+    let textId = ""; // если id не передано, то id не вставляется
+    let status = "Otdel" // название класса по умолчанию
     if(id != undefined) {
         textId = `id=${id}`
     }
     if(name == undefined || surname == undefined || position == undefined) {
+        // если ничего не передано, то отдел не показывается. Но пространство он будет занимать
         status = "dontShow";
     }
     return `
@@ -351,9 +342,11 @@ function getOtdel(id, name, surname, position) {
 }
 
 function getNewArrayOtdels() {
-    let rukLenght = array.Rukovodstvo.length;
+    // метод, которая возвращает массив в массиве, чтобы рисовать отделы, курируемые руководством
+    // метод возвращает массав такого типа [ ["", {}, {}, ""], ["", {}, "", ""] ] 
+    
     if(rukLenght > 0) {
-
+        // ========= получаем самую большую длину отделов по вертикали. Это количество подмассивов
         let bigSize = 0;
         for(let i = 0; i < rukLenght; i++) {
             let size = array.Rukovodstvo[i].subordinate_departments.length;
@@ -361,14 +354,14 @@ function getNewArrayOtdels() {
                 bigSize = size;
             }
         }
-
+        // в массив ложим пустые массивы
         if(bigSize > 0) {
             let newArr = [];
-            for(let i = 0; i < rukLenght; i++) {
+            for(let i = 0; i < bigSize; i++) {
                 let arr = []
                 newArr.push(arr)
             }
-            
+        // если курируемый отдел есть, ложим в массив объект, если нет, то пустую строку
             for(let i = 0; i < rukLenght; i++) {
                 for(let j = 0; j < bigSize; j++) {
                     let temp = array.Rukovodstvo[i].subordinate_departments[j]
@@ -390,28 +383,29 @@ function getNewArrayOtdels() {
 }
 
 function getOtdels() {
-    let BigBlock = document.querySelector(".BigBlock .OtdelKategories");
+    // метод, которая рисует отделы руководства
+    let OtdelKategories = document.querySelector(".BigBlock .OtdelKategories");
     let newArr = getNewArrayOtdels()
     
     for(let i = 0; i < newArr.length; i++) {
         let text = "";
-        let secondKategory = document.createElement("div");
-        if(i == 0) {
-            secondKategory.className = "firstKategory";
+        let div = document.createElement("div"); 
+        if(i == 0) { // для отделов первого блока margin сверху не должно быть, поэтому ложим в отдельные дивы
+            div.className = "firstKategory";
         } else {
-            secondKategory.className = "secondKategory";
+            div.className = "secondKategory";
         }
-
+        // рисуем отделы
         for(let j = 0; j < newArr[i].length; j++) {
             if(newArr[i].length) {
                 text += getOtdel(newArr[i][j].id, newArr[i][j].RukName, newArr[i][j].RukSurname, newArr[i][j].RukPosition);
             }
         }
         if(text) {
-            secondKategory.id = id()
-            secondKategory.innerHTML = text;
+            div.id = id()
+            div.innerHTML = text;
             
-            BigBlock.appendChild(secondKategory);
+            OtdelKategories.appendChild(div);
         }
     }
 
@@ -419,6 +413,7 @@ function getOtdels() {
 }
 
 function getCanvasVerticalLines(modifyArray) {
+    // метод, для вставки канваса между руководством и отделами
     let Rukovodstvo = document.querySelector(".Rukovodstvo");
     let BigBlock = document.querySelector(".BigBlock");
     let OtdelKategories = document.querySelector(".OtdelKategories");
@@ -434,15 +429,15 @@ function getCanvasVerticalLines(modifyArray) {
         </div>
     `;
     verticalLinesDiv.innerHTML = text;
-    BigBlock.insertBefore(verticalLinesDiv, OtdelKategories)
+    BigBlock.insertBefore(verticalLinesDiv, OtdelKategories) // канвас вставляем между руководством и отделами
 
-    drawVerticalLines(modifyArray)
+    drawVerticalLines(modifyArray) // вызываем метод, для рисовки линии
 }
 
 
 function drawVerticalLines(modifyArray=newArray) {
-    // функция рисует линии между первым рук и руководством
-    let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .Otdel")
+    // функция рисует линии между руководством и отделами
+    let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .Otdel") // берем все отделы
     let otdelHeightSize = otdel.offsetHeight;   // высота одного отдела
     let halfOtdelHeightSize = otdelHeightSize / 2; // половина высоты отдела
     let heightEndPoint = verticalLinesHeight + halfOtdelHeightSize; // конечная точка для первого отдела(середина отдела)
@@ -454,11 +449,11 @@ function drawVerticalLines(modifyArray=newArray) {
 
     let canvasvertical = document.querySelector('.canvasvertical').getContext('2d');
     canvasvertical.beginPath();
-    canvasvertical.lineWidth = 2; //толщина 2px
+    canvasvertical.lineWidth = thickness; //толщина px
  
     let startPoint = 50;
     
-    let newArr = modifyArray;    // переменная равно переданному массиву. Если ничего не передано, берется значение по умолч
+    let newArr = modifyArray;    // переменная равно переданному массиву. Если ничего не передано, берется значение по умолч(чтобы линии отрисовались заново при нажатии на отдел)
 
     let nextEndPoint = 0;
     for(let i = 0; i < newArr.length; i++) {
@@ -495,12 +490,14 @@ function drawVerticalLines(modifyArray=newArray) {
 
 
 function activeClass() {
+    // при нажатии на отдел, надо чтобы она расскрылась, а остальные отделы ниже исчезли
     let otdels = document.querySelectorAll(".OtdelKategories .Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
-            clearPodcategory()
+            clearPodcategory() // удаляет подотдел, чтобы нарисовать по новому
+            getPodCategory(this.id) // рисуем подотделы по новому
+
             // ================== скрытие и показ элемента ========================
-            getPodCategory(this.id)
             let thisId = this.parentElement.id;
             let bool2 = false;
             let OtdelKategories = document.querySelector(".OtdelKategories").children;
@@ -558,6 +555,7 @@ function activeClass() {
 }
 
 function RukovodstvoshowAllElements() {
+    // функция при нажатии на руководство, отделы рисует полностью, а подотделы скрываются
     let otdels = document.querySelectorAll(".Rukovodstvo .Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
@@ -585,12 +583,15 @@ function RukovodstvoshowAllElements() {
 
 
 function getArrayPodcategory(id, arr) {
-    let arrLength = arr.length;
-    let findObj = null;
-    let result;
-    let number;
-    let podarr = [];
+    // сложный метод для понятия. Метод принимает id нажатого отдела, и перебирает весь массив чтобы найти этот id
+    // как только он находит, он возвращает этот объект
+    let arrLength = arr.length; // длина руководства
+    let findObj = null; // найденный объект
+    let result;         // временная переменная для найденного объекта
+    let number;         // в каком руководстве был найден объект
+    let podarr = [];    // возвращаемый методом массив в массиве
     
+    // ищем id по всему массиву
     for(let i = 0; i < arr.length; i++) {
         if(arr[i].subordinate_departments) {
             for(let j = 0; j < arr[i].subordinate_departments.length; j++) {
@@ -603,6 +604,7 @@ function getArrayPodcategory(id, arr) {
             }
         }
     }
+    // найденный объект ложим в массив, чтобы потом нарисовать
     if(findObj) {
         let subordinate_departmentsLength = 0;
         if(findObj.subordinate_departments) {
@@ -643,6 +645,8 @@ function getArrayPodcategory(id, arr) {
 }
 
 function getFindObj(id, subordinate_departments) {
+    // метод, которая ищет id. здесь используется рекурсия. Если id не найдено, то она ищет дальше глубже если есть массивы
+    // возвращает найденный объект
         if(subordinate_departments.id === id) {
             return subordinate_departments;
         } else {
@@ -662,12 +666,12 @@ function getFindObj(id, subordinate_departments) {
 }
 
 function getPodCategory(id) {
+    // метод рисует отделы подкатегории
     let SR__block = document.querySelector(".SR__block");
    let PodCategory = document.createElement("div");
    PodCategory.className = "podCategory";
-   let result = getArrayPodcategory(id, array.Rukovodstvo)
-   
-   console.log(result)        
+   let result = getArrayPodcategory(id, array.Rukovodstvo) // получаем массив в массиве
+         
    for(let i = 0; i < result.length; i++) {
         let text = "";
         let podOtdelsSecondKategory = document.createElement("div");
@@ -677,8 +681,8 @@ function getPodCategory(id) {
         } else {
             podOtdelsSecondKategory.className = "podOtdelsSecondKategory";
         }
-
-        for(let j = 0; j < array.Rukovodstvo.length; j++) {
+    
+        for(let j = 0; j < rukLenght; j++) {
             text += getOtdel(result[i][j].id, result[i][j].RukName, result[i][j].RukSurname, result[i][j].RukPosition)
         }
 
@@ -693,10 +697,11 @@ function getPodCategory(id) {
 
     SR__block.appendChild(PodCategory)
 
-    getPodCategoryVerticalLines()
+    getPodCategoryVerticalLines() // вызываем метод для рисовки линии
 }
 
 function getPodCategoryVerticalLines() {
+    // метод вставляет канвас перед подотделом, чтобы потом нарисовать линии
     let SR__block = document.querySelector(".SR__block");
     let lastElement = SR__block.lastElementChild;
 
@@ -718,6 +723,7 @@ function getPodCategoryVerticalLines() {
 }
 
 function clearPodcategory() {
+    // метод полностью удаляет подкатегорию
     let SR__block = document.querySelector(".SR__block");
     let lastElem1 = SR__block.lastElementChild;
     if(lastElem1.classList.contains("podCategory")) {
@@ -732,6 +738,7 @@ function clearPodcategory() {
 
 
 function id() {
+    // метод возвращает уникальный id
     return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
 }
 
