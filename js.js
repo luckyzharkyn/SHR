@@ -102,7 +102,7 @@ let array = {
                             id: id(),
                             "RukName": "Шынар2",
                             "RukSurname": "Акмаралкызы",
-                            "RukPosition": "Отдел по производству башмаков",
+                            "RukPosition": "Главный эксперт",
                         }
                     ]
                 },
@@ -163,7 +163,7 @@ let array = {
                                     id: id(),
                                     "RukName": "Шынар2",
                                     "RukSurname": "Акмаралкызы",
-                                    "RukPosition": "Отдел по производству башмаков",
+                                    "RukPosition": "Специалист",
                                 }
                             ]
                         },
@@ -241,7 +241,10 @@ let thickness = 2; // толщина линии
 let rukLenght = array.Rukovodstvo.length; // длина руководства
 let newArray = getNewArrayOtdels()  // в переменную ложим массив в массиве для рисовки отделов
 let differentName = 1; // разные названия для verticalLines
-let marginL = 90;
+let marginL = 90; // отступ слева
+
+let OtdelKategoriesID = null;
+let BigBlockPodcategoryID = [];
 // ============== global params =========
 
 function Start() {
@@ -341,9 +344,14 @@ function getOtdel(id, name, surname, position, status="Otdel") {
         <div class="${status}" ${textId} onClick="func(id)">
             <div class="rukovodstvo">
                 <div class="SR_card">
-                    <p>${name}</p>
-                    <p>${surname}</p>
-                    <p>${position}</p>
+                    <div>
+                        <img src="./1.jpg">
+                    </div>
+                    <div class="info">
+                        <div class="name">${name}</div>
+                        <div class="surname">${surname}</div>
+                        <div class="position">${position}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -355,31 +363,72 @@ function func(id) {
     for(let i = 0; i < otdels.length; i++) {
         otdels[i].addEventListener("click", function() {
             if(this.id === id) {
-                let result = getArrayPodcategory(id, array.Rukovodstvo);
-                if(result[0] != null) {
-                    if(result[0].length > 0) {
-                        let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
-                        let childrens = BigBlockPodcategory.children;
-                        let parentId = this.parentElement.parentElement.id
-        
-                        let bool = false;
-                        for(let i = 0; i < childrens.length; i++) {
-                            if(parentId === childrens[i].id) {
-                                bool = true;
-                                continue;
-                            } else {
-                                if(bool) {
-                                    childrens[i].classList.add("slowlyShow")
-                                    setTimeout(() => {
-                                        childrens[i].className = "slowlyShow";
-                                    }, 500);
+                if(BigBlockPodcategoryID.length > 0) {
+                    for(let i = 0; i < BigBlockPodcategoryID.length; i++) {
+                        if(id === BigBlockPodcategoryID[i]) {
+                            // BigBlockPodcategoryID.splice(i, 1);
+                        } else {
+                            if(BigBlockPodcategoryID.length - 1 == i) {
+                                let result = getArrayPodcategory(id, array.Rukovodstvo);
+                                if(result[0] != null) {
+                                    if(result[0].length > 0) {
+                                        BigBlockPodcategoryID.push(id);
+
+                                        let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+                                        let childrens = BigBlockPodcategory.children;
+                                        let parentId = this.parentElement.parentElement.id
+                        
+                                        let bool = false;
+                                        for(let i = 0; i < childrens.length; i++) {
+                                            if(parentId === childrens[i].id) {
+                                                bool = true;
+                                                continue;
+                                            } else {
+                                                if(bool) {
+                                                    childrens[i].classList.add("slowlyShow")
+                                                    setTimeout(() => {
+                                                        childrens[i].className = "slowlyShow";
+                                                    }, 500);
+                                                }
+                                            }
+                                        }
+                                        
+                                        getPodCategory(id);
                                 }
+                        }
                             }
                         }
-                        
-                        getPodCategory(id);
                     }
+                } else {
+                        let result = getArrayPodcategory(id, array.Rukovodstvo);
+                        if(result[0] != null) {
+                            if(result[0].length > 0) {
+                                BigBlockPodcategoryID.push(id);
+
+                                let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+                                let childrens = BigBlockPodcategory.children;
+                                let parentId = this.parentElement.parentElement.id
+                
+                                let bool = false;
+                                for(let i = 0; i < childrens.length; i++) {
+                                    if(parentId === childrens[i].id) {
+                                        bool = true;
+                                        continue;
+                                    } else {
+                                        if(bool) {
+                                            childrens[i].classList.add("slowlyShow")
+                                            setTimeout(() => {
+                                                childrens[i].className = "slowlyShow";
+                                            }, 500);
+                                        }
+                                    }
+                                }
+                                
+                                getPodCategory(id);
+                            }
+                        }
                 }
+                
             }
         })
     }
@@ -473,19 +522,22 @@ function getCanvasVerticalLines(modifyArray) {
     `;
     verticalLinesDiv.innerHTML = text;
     BigBlock.insertBefore(verticalLinesDiv, OtdelKategories) // канвас вставляем между руководством и отделами
-
+    
     drawVerticalLines(modifyArray) // вызываем метод, для рисовки линии
 }
 
 
 function drawVerticalLines(modifyArray=newArray) {
+    console.log(modifyArray)
     // функция рисует линии между руководством и отделами
     let otdel = document.querySelector(".BigBlock .OtdelKategories .firstKategory .Otdel") // берем все отделы
     let otdelHeightSize = otdel.offsetHeight;   // высота одного отдела
     let halfOtdelHeightSize = otdelHeightSize / 2; // половина высоты отдела
     let heightEndPoint = verticalLinesHeight + halfOtdelHeightSize; // конечная точка для первого отдела(середина отдела)
     let otdelRukWidth = document.querySelector(".BigBlock .OtdelsRukovodstvo .Rukovodstvo .Otdel").offsetWidth; // ширина отдела
-
+    console.log(otdel.id)
+    console.log(otdelHeightSize)
+    console.log(halfOtdelHeightSize)
     let firstKategory = document.querySelector(".firstKategory")
     let firstKategoryHeight = firstKategory.offsetHeight + verticalLinesHeight;   // высота блока firstKategory
     let gap = firstKategoryHeight - otdelHeightSize;   // зазор между отделами(вертикально)
@@ -537,62 +589,66 @@ function activeClass() {
     let otdels = document.querySelectorAll(".OtdelKategories .Otdel");
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
-            clearPodcategory() // удаляет подотдел, чтобы нарисовать по новому
-            getPodCategory(this.id) // рисуем подотделы по новому
+            if(OtdelKategoriesID == this.id) {
+                showAll();
+                OtdelKategoriesID = null;
+            } else {
+                OtdelKategoriesID = this.id;
+                clearPodcategory() // удаляет подотдел, чтобы нарисовать по новому
+                getPodCategory(this.id) // рисуем подотделы по новому
 
-            // ================== скрытие и показ элемента ========================
-            let thisId = this.parentElement.id;
-            let bool2 = false;
-            let OtdelKategories = document.querySelector(".OtdelKategories").children;
-            for(let elem of OtdelKategories) {
-                if(elem.classList.contains("slowlyShow")) {
-                    if(elem.id === thisId) {
-                        bool2 = true;
-                        continue
-                    }
-                    if(bool2) {
-                        elem.classList.add("slowlyShow")
-                        setTimeout(() => {
-                            elem.className = "slowlyShow"
-                        }, 500);
-                    }
-                } else {
-                    if(elem.id === thisId) {
-                        bool2 = true;
-                        continue;
-                    }
-                    if(bool2) {
-                        elem.classList.add("slowlyShow")
-                        setTimeout(() => {
-                            elem.className = "slowlyShow"
-                        }, 500);
-                    }
-                }
-            }
-            // ================== скрытие и показ элемента ========================
-
-            // ================== регуляровка линии =================
-            let tempArray = [];
-            let bool = false;
-            for(let i = 0; i < newArray.length; i++) {
-                if(bool) {
-                    tempArray.push([]);
-                } else {
-                    for(let j = 0; j < newArray[i].length; j++) {
-                        if(newArray[i][j].id === otdel.id) {
-                            bool = true;    
+                // ================== скрытие и показ элемента ========================
+                let thisId = this.parentElement.id;
+                let bool2 = false;
+                let OtdelKategories = document.querySelector(".OtdelKategories").children;
+                for(let elem of OtdelKategories) {
+                    if(elem.classList.contains("slowlyShow")) {
+                        if(elem.id === thisId) {
+                            bool2 = true;
+                            continue
+                        }
+                        if(bool2) {
+                            elem.classList.add("slowlyShow")
+                            setTimeout(() => {
+                                elem.className = "slowlyShow"
+                            }, 500);
+                        }
+                    } else {
+                        if(elem.id === thisId) {
+                            bool2 = true;
+                            continue;
+                        }
+                        if(bool2) {
+                            elem.classList.add("slowlyShow")
+                            setTimeout(() => {
+                                elem.className = "slowlyShow"
+                            }, 500);
                         }
                     }
-                    tempArray.push(newArray[i])
                 }
+                // ================== скрытие и показ элемента ========================
+
+                // ================== регуляровка линии =================
+                let tempArray = [];
+                let bool = false;
+                for(let i = 0; i < newArray.length; i++) {
+                    if(bool) {
+                        tempArray.push([]);
+                    } else {
+                        for(let j = 0; j < newArray[i].length; j++) {
+                            if(newArray[i][j].id === otdel.id) {
+                                bool = true;    
+                            }
+                        }
+                        tempArray.push(newArray[i])
+                    }
+                }
+                let BigBlock = document.querySelector(".BigBlock");
+                let verticalLinesDiv = document.querySelector(".verticalLinesDiv");
+                BigBlock.removeChild(verticalLinesDiv)
+                getCanvasVerticalLines(tempArray)
+                // ================== регуляровка линии ================        
             }
-            let BigBlock = document.querySelector(".BigBlock");
-            let verticalLinesDiv = document.querySelector(".verticalLinesDiv");
-            BigBlock.removeChild(verticalLinesDiv)
-            getCanvasVerticalLines(tempArray)
-            // ================== регуляровка линии =================
-            
-            
         })
     }
 }
@@ -603,27 +659,29 @@ function RukovodstvoshowAllElements() {
     
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
-            clearPodcategory()
-            let elems = document.querySelectorAll(".slowlyShow");
-            
-            for(let elem of elems) {
-                
-                elem.classList.remove("slowlyShow")
-                elem.classList.add("slowlyView")
-                elem.classList.add("secondKategory")
-            }
-
-
-            let BigBlock = document.querySelector(".BigBlock");
-            let verticalLinesDiv = document.querySelector(".verticalLinesDiv");
-            BigBlock.removeChild(verticalLinesDiv)
-            getCanvasVerticalLines(newArray)
+            showAll()
         })
     }
 
     
 }
+function showAll() {
+    clearPodcategory()
+    let elems = document.querySelectorAll(".slowlyShow");
+    
+    for(let elem of elems) {
+        
+        elem.classList.remove("slowlyShow")
+        elem.classList.add("slowlyView")
+        elem.classList.add("secondKategory")
+    }
 
+
+    let BigBlock = document.querySelector(".BigBlock");
+    let verticalLinesDiv = document.querySelector(".verticalLinesDiv");
+    BigBlock.removeChild(verticalLinesDiv)
+    getCanvasVerticalLines(newArray)
+}
 
 
 function getArrayPodcategory(id, arr) {
@@ -824,18 +882,6 @@ function clearPodcategory() {
     let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
     BigBlockPodcategory.innerHTML = "";
     marginL = 90;
-    // let childrens = BigBlockPodcategory.children;
-    // // console.log(childrens)
-    // for(let elem of childrens) {
-    //     console.log(elem)
-    //     try {
-    //         BigBlockPodcategory.removeChild(elem)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    //     console.log("this")
-    // }
-    
 }
 
 
