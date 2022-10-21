@@ -111,6 +111,14 @@ let array = {
                     "RukName": "Фаргиза",
                     "RukSurname": "Сандугашова",
                     "RukPosition": "Отдел по производству носков",
+                    "subordinate_departments" : [
+                        {
+                            id: id(),
+                            "RukName": "Шынар1",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "Отдел по производству башмаков",
+                        }
+                    ]
                 },
             ]
         }, 
@@ -232,6 +240,50 @@ let array = {
             "RukPosition": "Руководство",
             "subordinate_departments": []
         },
+        {
+            id: id(),
+            "RukName": "Марат",
+            "RukSurname": "Башмаков",
+            "RukPosition": "Руководство",
+            "subordinate_departments": [
+                {
+                    id: id(),
+                    "RukName": "Шынар",
+                    "RukSurname": "Акмаралкызы",
+                    "RukPosition": "Отдел по производству башмаков",
+                    "subordinate_departments" : [
+                        {
+                            id: id(),
+                            "RukName": "Шынар1",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "Отдел по производству башмаков",
+                            "subordinate_departments" : [
+                                {
+                                    id: id(),
+                                    "RukName": "Шынар1",
+                                    "RukSurname": "Акмаралкызы",
+                                    "RukPosition": "Отдел по производству башмаков",
+                                }
+                            ],
+                        }
+                    ],
+                    "employees": [
+                        {
+                            id: id(),
+                            "RukName": "Шынар2",
+                            "RukSurname": "Акмаралкызы",
+                            "RukPosition": "Главный эксперт",
+                        }
+                    ]
+                },
+                {
+                    id: id(),
+                    "RukName": "Фаргиза",
+                    "RukSurname": "Сандугашова",
+                    "RukPosition": "Отдел по производству носков",
+                },
+            ]
+        }, 
     ],
 
 }
