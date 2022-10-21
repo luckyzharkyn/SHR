@@ -241,6 +241,7 @@ let thickness = 2; // толщина линии
 let rukLenght = array.Rukovodstvo.length; // длина руководства
 let newArray = getNewArrayOtdels()  // в переменную ложим массив в массиве для рисовки отделов
 let differentName = 1; // разные названия для verticalLines
+let marginL = 90;
 // ============== global params =========
 
 function Start() {
@@ -646,7 +647,7 @@ function getArrayPodcategory(id, arr) {
             }
             podarr.push(tempArr);
         }
-        return podarr;
+        return [podarr, number];
     } else {
         return null
     }
@@ -676,15 +677,17 @@ function getFindObj(id, subordinate_departments) {
 function getPodCategory(otdelId) {
     // метод рисует отделы подкатегории
     let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+    BigBlockPodcategory.style.marginLeft = `${marginL}px`
     let result = getArrayPodcategory(otdelId, array.Rukovodstvo) // получаем массив в массиве
     let bool = false;
-    let marginLeft = 90;
-    for(let i = 0; i < result.length; i++) {
-        if(result.length - 1 == i) {
+    let numberClickObj = result[1]
+    for(let i = 0; i < result[0].length; i++) {
+        if(result[0].length - 1 == i) {
             bool = true
         }
        let PodCategory = document.createElement("div");
        PodCategory.className = "podCategory";
+       PodCategory.style.marginLeft = `${marginL}px`
         let text = "";
         let podOtdelsSecondKategory = document.createElement("div");
         
@@ -695,7 +698,7 @@ function getPodCategory(otdelId) {
         }
     
         for(let j = 0; j < rukLenght; j++) {
-            text += getOtdel(result[i][j].id, result[i][j].RukName, result[i][j].RukSurname, result[i][j].RukPosition)
+            text += getOtdel(result[0][i][j].id, result[0][i][j].RukName, result[0][i][j].RukSurname, result[0][i][j].RukPosition)
         }
 
         if(text) {
@@ -705,14 +708,16 @@ function getPodCategory(otdelId) {
             PodCategory.appendChild(podOtdelsSecondKategory);
             BigBlockPodcategory.appendChild(PodCategory)
         
-            getPodCategoryVerticalLines(bool) // вызываем метод для рисовки линии
+            getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) // вызываем метод для рисовки линии
         }
 
     }
+    marginL += 45;
 
+     
 }
 
-function getPodCategoryVerticalLines(bool) {
+function getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) {
     // метод вставляет канвас перед подотделом, чтобы потом нарисовать линии
     let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
     let lastElement = BigBlockPodcategory.lastElementChild;
@@ -731,39 +736,52 @@ function getPodCategoryVerticalLines(bool) {
         </div>
     `;
     verticalLinesDiv.innerHTML = text;
-    BigBlockPodcategory.insertBefore(verticalLinesDiv, lastElement)
-
-    drawVerticalLinesForPodCategory(bool)
+    // BigBlockPodcategory.insertBefore(verticalLinesDiv, lastElement)
+    PodCategory.prepend(verticalLinesDiv)
+    drawVerticalLinesForPodCategory(bool, numberClickObj)
 }
 
-function drawVerticalLinesForPodCategory(bool) {
-    if(!bool) {
-        let canvasverticalPodcategory = document.querySelector(`.canvasvertical${differentName}`).getContext('2d');
-        canvasverticalPodcategory.beginPath();
-        canvasverticalPodcategory.lineWidth = thickness; //толщина px
-        // ================================================================
-        // вертикальная линия
-        canvasverticalPodcategory.moveTo(470, 0);
-        canvasverticalPodcategory.lineTo(470, 260);
-        
-        //  первая короткая горизонтальная линия
-        canvasverticalPodcategory.moveTo(470, 140);
-        canvasverticalPodcategory.lineTo(490, 140);
-        canvasverticalPodcategory.stroke();
-    } else {
-        let canvasverticalPodcategory = document.querySelector(`.canvasvertical${differentName}`).getContext('2d');
-        canvasverticalPodcategory.beginPath();
-        canvasverticalPodcategory.lineWidth = thickness; //толщина px
-        // ================================================================
-        // вертикальная линия
-        canvasverticalPodcategory.moveTo(470, 0);
-        canvasverticalPodcategory.lineTo(470, 140);
-        
-        //  первая короткая горизонтальная линия
-        canvasverticalPodcategory.moveTo(470, 140);
-        canvasverticalPodcategory.lineTo(490, 140);
-        canvasverticalPodcategory.stroke();
+function drawVerticalLinesForPodCategory(bool, numberClickObj) {
+    let Otdel= document.querySelector(".OtdelKategories .firstKategory .Otdel");
+    let OtdelHeight = Otdel.offsetHeight;
+    let OtdelWidth = Otdel.offsetWidth;
+
+    let startPoint = 5;
+    if(numberClickObj != 0) {
+        for(let i = 0; i < numberClickObj; i++) {
+            startPoint += OtdelWidth;
+        }
     }
+    let horizontalLineSize = startPoint + 18;
+    let otherLineHeight = OtdelHeight+ verticalLinesHeight;
+    let EndLineHeight = (OtdelHeight / 2) + verticalLinesHeight;
+    let horizontalLineStartPoint = (OtdelHeight / 2) + verticalLinesHeight;
+    let horizontalLineEndPoint = (OtdelHeight / 2) + verticalLinesHeight;
+
+    let canvasverticalPodcategory = document.querySelector(`.canvasvertical${differentName}`).getContext('2d');
+    canvasverticalPodcategory.beginPath();
+    canvasverticalPodcategory.lineWidth = thickness; //толщина px
+
+    if(!bool) {
+        // ================================================================
+        // вертикальная линия
+        canvasverticalPodcategory.moveTo(startPoint, 0);
+        canvasverticalPodcategory.lineTo(startPoint, otherLineHeight);
+        
+        //  короткая горизонтальная линия
+        canvasverticalPodcategory.moveTo(startPoint, horizontalLineStartPoint);
+        canvasverticalPodcategory.lineTo(horizontalLineSize, horizontalLineEndPoint);
+    } else {
+        // ================================================================
+        // вертикальная линия
+        canvasverticalPodcategory.moveTo(startPoint, 0);
+        canvasverticalPodcategory.lineTo(startPoint, EndLineHeight);
+        
+        //  короткая горизонтальная линия
+        canvasverticalPodcategory.moveTo(startPoint, horizontalLineStartPoint);
+        canvasverticalPodcategory.lineTo(horizontalLineSize, horizontalLineEndPoint);
+    }
+    canvasverticalPodcategory.stroke();
 }
 
 function clearPodcategory() {
