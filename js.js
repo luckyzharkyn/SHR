@@ -600,6 +600,7 @@ function activeClass() {
 function RukovodstvoshowAllElements() {
     // функция при нажатии на руководство, отделы рисует полностью, а подотделы скрываются
     let otdels = document.querySelectorAll(".Rukovodstvo .Otdel");
+    
     for(let otdel of otdels) {
         otdel.addEventListener("click", function() {
             clearPodcategory()
@@ -820,17 +821,21 @@ function drawVerticalLinesForPodCategory(bool, numberClickObj) {
 }
 
 function clearPodcategory() {
-    // метод полностью удаляет подкатегорию
-    // let SR__block = document.querySelector(".SR__block");
-    // let lastElem1 = SR__block.lastElementChild;
-    // if(lastElem1.classList.contains("podCategory")) {
-    //     lastElem1.remove();
+    let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+    BigBlockPodcategory.innerHTML = "";
+    marginL = 90;
+    // let childrens = BigBlockPodcategory.children;
+    // // console.log(childrens)
+    // for(let elem of childrens) {
+    //     console.log(elem)
+    //     try {
+    //         BigBlockPodcategory.removeChild(elem)
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
     //     console.log("this")
     // }
-    // let lastElem2 = SR__block.lastElementChild;
-    // if(lastElem2.classList.contains("verticalLinesDiv")) {
-    //     lastElem2.remove()
-    // }
+    
 }
 
 
