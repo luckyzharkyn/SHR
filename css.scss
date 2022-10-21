@@ -75,6 +75,9 @@
         background-color: green;
         text-align: center;
         margin: 0 20px;
+        &:hover {
+            border: 3px solid red;
+        }
     }
     .divCanvas {
         height: 50px;

@@ -338,7 +338,7 @@ function getOtdel(id, name, surname, position, status="Otdel") {
         status = "dontShow";
     }
     return `
-        <div class="${status}" ${textId}>
+        <div class="${status}" ${textId} onClick="func(id)">
             <div class="rukovodstvo">
                 <div class="SR_card">
                     <p>${name}</p>
@@ -349,7 +349,41 @@ function getOtdel(id, name, surname, position, status="Otdel") {
         </div>
     `
 }
-
+function func(id) {
+    let otdels = document.querySelectorAll(".BigBlockPodcategory .Otdel")
+    
+    for(let i = 0; i < otdels.length; i++) {
+        otdels[i].addEventListener("click", function() {
+            if(this.id === id) {
+                let result = getArrayPodcategory(id, array.Rukovodstvo);
+                if(result[0] != null) {
+                    if(result[0].length > 0) {
+                        let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
+                        let childrens = BigBlockPodcategory.children;
+                        let parentId = this.parentElement.parentElement.id
+        
+                        let bool = false;
+                        for(let i = 0; i < childrens.length; i++) {
+                            if(parentId === childrens[i].id) {
+                                bool = true;
+                                continue;
+                            } else {
+                                if(bool) {
+                                    childrens[i].classList.add("slowlyShow")
+                                    setTimeout(() => {
+                                        childrens[i].className = "slowlyShow";
+                                    }, 500);
+                                }
+                            }
+                        }
+                        
+                        getPodCategory(id);
+                    }
+                }
+            }
+        })
+    }
+}
 function getNewArrayOtdels() {
     // метод, которая возвращает массив в массиве, чтобы рисовать отделы, курируемые руководством
     // метод возвращает массав такого типа [ ["", {}, {}, ""], ["", {}, "", ""] ] 
@@ -649,7 +683,7 @@ function getArrayPodcategory(id, arr) {
         }
         return [podarr, number];
     } else {
-        return null
+        return [null, number]
     }
 }
 
@@ -679,48 +713,50 @@ function getPodCategory(otdelId) {
     let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
     BigBlockPodcategory.style.marginLeft = `${marginL}px`
     let result = getArrayPodcategory(otdelId, array.Rukovodstvo) // получаем массив в массиве
-    let bool = false;
-    let numberClickObj = result[1]
-    for(let i = 0; i < result[0].length; i++) {
-        if(result[0].length - 1 == i) {
-            bool = true
-        }
-       let PodCategory = document.createElement("div");
-       PodCategory.className = "podCategory";
-       PodCategory.style.marginLeft = `${marginL}px`
-        let text = "";
-        let podOtdelsSecondKategory = document.createElement("div");
-        
-        if(i == 0) {
-            podOtdelsSecondKategory.className = "podOtdelsFirstKategory";
-        } else {
-            podOtdelsSecondKategory.className = "podOtdelsSecondKategory";
-        }
-    
-        for(let j = 0; j < rukLenght; j++) {
-            text += getOtdel(result[0][i][j].id, result[0][i][j].RukName, result[0][i][j].RukSurname, result[0][i][j].RukPosition)
-        }
 
-        if(text) {
-            PodCategory.id = id()
-            podOtdelsSecondKategory.innerHTML = text;
+    if(result[0] != null) {
+        if(result[0].length > 0) {
+            let bool = false;
+            let numberClickObj = result[1]
+            for(let i = 0; i < result[0].length; i++) {
+                if(result[0].length - 1 == i) {
+                    bool = true
+                }
+               let PodCategory = document.createElement("div");
+               PodCategory.className = "podCategory";
+               PodCategory.style.marginLeft = `${marginL}px`
+                let text = "";
+                let podOtdelsSecondKategory = document.createElement("div");
+                
+                if(i == 0) {
+                    podOtdelsSecondKategory.className = "podOtdelsFirstKategory";
+                } else {
+                    podOtdelsSecondKategory.className = "podOtdelsSecondKategory";
+                }
             
-            PodCategory.appendChild(podOtdelsSecondKategory);
-            BigBlockPodcategory.appendChild(PodCategory)
+                for(let j = 0; j < rukLenght; j++) {
+                    text += getOtdel(result[0][i][j].id, result[0][i][j].RukName, result[0][i][j].RukSurname, result[0][i][j].RukPosition)
+                }
         
-            getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) // вызываем метод для рисовки линии
+                if(text) {
+                    PodCategory.id = id()
+                    podOtdelsSecondKategory.innerHTML = text;
+                    
+                    PodCategory.appendChild(podOtdelsSecondKategory);
+                    BigBlockPodcategory.appendChild(PodCategory)
+                
+                    getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) // вызываем метод для рисовки линии
+                }
+        
+            }
+            marginL += 45;
         }
-
-    }
-    marginL += 45;
-
-     
+    }     
 }
 
 function getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) {
     // метод вставляет канвас перед подотделом, чтобы потом нарисовать линии
     let BigBlockPodcategory = document.querySelector(".BigBlockPodcategory");
-    let lastElement = BigBlockPodcategory.lastElementChild;
 
     let canvashorizontal = document.querySelector(".canvashorizontal")
     let width = canvashorizontal.offsetWidth;
@@ -736,7 +772,6 @@ function getPodCategoryVerticalLines(bool, PodCategory, numberClickObj) {
         </div>
     `;
     verticalLinesDiv.innerHTML = text;
-    // BigBlockPodcategory.insertBefore(verticalLinesDiv, lastElement)
     PodCategory.prepend(verticalLinesDiv)
     drawVerticalLinesForPodCategory(bool, numberClickObj)
 }
@@ -804,53 +839,5 @@ function id() {
     return (performance.now().toString(36)+Math.random().toString(36)).replace(/\./g,"");
 }
 
-
-
-// let canvasvertical2 = document.querySelector('.canvasvertical2').getContext('2d');
-// canvasvertical2.beginPath();
-// canvasvertical2.lineWidth = 2; //толщина 5px
-// // ================================================================
-// // вертикальная линия
-// canvasvertical2.moveTo(665, 0);
-// canvasvertical2.lineTo(665, 100);
-
-// //  первая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(685, 100);
-
-
-// // второй отдел
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 300);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 300);
-// canvasvertical2.lineTo(685, 300);
-
-
-// // должности
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 480);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 480);
-// canvasvertical2.lineTo(685, 480);
-
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 650);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 650);
-// canvasvertical2.lineTo(685, 650);
-
-// // по вертикали
-// canvasvertical2.moveTo(665, 100);
-// canvasvertical2.lineTo(665, 850);
-// // вторая короткая горизонтальная линия
-// canvasvertical2.moveTo(665, 850);
-// canvasvertical2.lineTo(685, 850);
-// ================================================================
-
-// canvasvertical2.stroke();
 
 
